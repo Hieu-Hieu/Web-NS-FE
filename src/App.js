@@ -1,12 +1,11 @@
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import Layoutuser from './pages/Layoutuser';
-import Layoutadmin from './pages/admin/Layoutadmin';
-import Login from './pages/login';
-import Register from './pages/register';
-import NotFound from './components/NotFound';
-import ResetPassword from './pages/ResetPassword';
-import GetToken from './pages/GetToken';
-
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import Layoutuser from "./pages/Layoutuser";
+import Layoutadmin from "./pages/admin/LayoutAdmin";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import NotFound from "./components/NotFound";
+import ResetPassword from "./pages/ResetPassword";
+import GetToken from "./pages/GetToken";
 
 function App() {
   return (
@@ -24,6 +23,4 @@ function App() {
   );
 }
 
-export default App
-
-
+export default App;
