@@ -1,0 +1,154 @@
+.order {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 30px;
+}
+
+.order__info-shipping {
+  width: 60%;
+}
+
+.order__info-title {
+  font-size: 20px;
+  text-transform: uppercase;
+}
+
+.order__info-form {
+}
+
+.order__info-form-item {
+  width: 100%;
+  margin: 16px 0;
+}
+
+.order__info-form-item.half {
+  width: 48%;
+  flex-wrap: wrap;
+}
+
+.order__info-item-half {
+  display: flex;
+  justify-content: space-between;
+}
+
+.order__info-input-label {
+  font-size: 16px;
+  font-weight: 500;
+  display: block;
+}
+
+.order__info-input {
+  border: solid 1px #ccc;
+  font-size: 14px;
+  padding: 6px 10px;
+  width: 100%;
+  border-radius: 2px;
+}
+
+.order__list {
+  width: 36%;
+}
+
+.order__list-title {
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.order__list-sub-title {
+  font-weight: 500;
+  font-size: 16px;
+  padding: 16px 0;
+  border-bottom: solid 2px #ececec;
+}
+
+.order__list-product {
+}
+
+.order__list-product-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 10px 0;
+  border-bottom: solid 1px #ddd;
+  margin-top: 6px;
+}
+
+.order__list-product-item-left {
+  display: inline-flex;
+}
+
+.order__list-product-name {
+  margin-right: 20px;
+  max-width: 160px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.order__list-product-quantity {
+}
+
+.order__list-product-price {
+}
+
+.order__shipping {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.order__shipping-title {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.order__shipping-fee {
+  font-size: 14px;
+}
+
+.order__price {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 26px;
+}
+
+.order__price-title {
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.order__price-total {
+  font-size: 14px;
+}
+
+.order__payment {
+  margin-top: 20px;
+}
+
+.order__payment-item {
+  margin-top: 8px;
+}
+
+.order__button {
+  display: flex;
+  margin-top: 30px;
+  justify-content: space-between;
+}
+.order__button-checkout {
+  padding: 8px 8px;
+  font-size: 14px;
+  background-color: #024137;
+  color: #fff;
+  border-radius: 3px;
+  margin-right: 16px;
+}
+.order__button-return {
+  padding: 8px 8px;
+  font-size: 14px;
+  background-color: #024137;
+  color: #fff;
+  border-radius: 3px;
+}

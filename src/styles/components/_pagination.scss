@@ -1,0 +1,43 @@
+.paginate {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  &__list {
+    display: flex;
+    .paginate__list-item {
+      margin-left: 4px;
+      button {
+        height: 46px;
+        padding: 16px;
+        font-size: 1.4rem;
+        font-weight: 600;
+        border-radius: 2px;
+
+        &:hover {
+          background-color: #dfdfdf;
+        }
+
+        &.active {
+          background-color: #dfdfdf;
+        }
+      }
+      a {
+        height: 46px;
+        padding: 16px;
+        font-size: 1.4rem;
+        font-weight: 600;
+        border-radius: 2px;
+        display: block;
+
+        &:hover {
+          background-color: #dfdfdf;
+        }
+
+        &.active {
+          background-color: #dfdfdf;
+          cursor: default;
+        }
+      }
+    }
+  }
+}

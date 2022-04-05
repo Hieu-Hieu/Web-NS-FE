@@ -1,0 +1,27 @@
+[
+    {
+        "icon": "bx bx-shopping-bag",
+        "count": "1,995",
+        "title": "Tổng sản phẩm"
+    },
+    {
+        "icon": "bx bx-cart",
+        "count": "2,001",
+        "title": "Tổng đơn hàng"
+    },
+    {
+        "icon": "bx bx-dollar-circle",
+        "count": "$2,632",
+        "title": "THu nhập"
+    },
+    {
+        "icon": "bx bx-receipt",
+        "count": "1,711",
+        "title": "Tổng khách hàng"
+    },
+    {
+        "icon": "bx bx-receipt",
+        "count": "1,711",
+        "title": "Total orders"
+    }
+]
