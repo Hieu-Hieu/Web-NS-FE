@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router";
+import { Route, Routes } from "react-router-dom";
 import Dashboard from "../pages/admin/Dashboard";
 import Products from "../pages/admin/Products";
 import Customers from "../pages/admin/Customers";
@@ -23,28 +23,29 @@ import OrderDetail from "../pages/admin/OrderDetail";
 
 const RouterAdmin = () => {
   return (
-    <Switch>
-      <Route path="/admin/products" component={Products} />
-      <Route path="/admin/newproduct" component={NewProduct} />
-      <Route path="/admin/customers" component={Customers} />
-      <Route path="/admin/newuser" component={NewUser} />
-      <Route path="/admin/user" component={User} />
-      <Route path="/admin/setting" component={Setting} />
-      <Route path="/admin/categories/:id" exact component={EditCategory} />
-      <Route path="/admin/categories" component={Categories} />
-      <Route path="/admin/analytics" component={Analytics} />
-      <Route path="/admin/orders" component={Orders} />
-      <Route path="/admin/newCategory" exact component={NewCategory} />
-      <Route path="/admin/brands" exact component={Brand} />
-      <Route path="/admin/newBrand" exact component={NewBrand} />
-      <Route path="/admin/brand/:id" exact component={EditBrand} />
-      <Route path="/admin/slides" exact component={Slides} />
-      <Route path="/admin/slides/:id" exact component={EditSlide} />
-      <Route path="/admin/newSlide" exact component={NewSlide} />
-      <Route path="/admin/product/:id" exact component={EditProduct} />
-      <Route path="/admin/order/:id" exact component={OrderDetail} />
-      <Route path="/admin" exact component={Dashboard} />
-    </Switch>
+    <Routes>
+      <Route path="admin" element={<Dashboard />} >
+        <Route path="products" element={<Products />} />
+        <Route path="newproduct" element={<NewProduct />} />
+        <Route path="customers" element={<Customers />} />
+        <Route path="newuser" element={<NewUser />} />
+        <Route path="user" element={<User />} />
+        <Route path="setting" element={<Setting />} />
+        <Route path="categories/:id" element={<EditCategory />} />
+        <Route path="categories" element={<Categories />} />
+        <Route path="analytics" element={<Analytics />} />
+        <Route path="orders" element={<Orders />} />
+        <Route path="newCategory" element={<NewCategory />} />
+        <Route path="brands" element={<Brand />} />
+        <Route path="newBrand" element={<NewBrand />} />
+        <Route path="brand/:id" element={<EditBrand />} />
+        <Route path="slides" element={<Slides />} />
+        <Route path="slides/:id" element={<EditSlide />} />
+        <Route path="newSlide" element={<NewSlide />} />
+        <Route path="product/:id" element={<EditProduct />} />
+        <Route path="order/:id" element={<OrderDetail />} />
+      </Route>
+    </Routes>
   );
 };
 

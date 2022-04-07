@@ -1,16 +1,19 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { } from '../styles/search.css';
 
-const Search = (props) => {
-
+const Search = () => {
+  let navigate = useNavigate();
   const [text, setText] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (text.trim()) {
-      props.history.push(`/catalog/name/${text}`)
+      // props.history.push(`/catalog/name/${text}`)
+      navigate(`/catalog/name/${text}`)
     } else {
-      props.history.push('/')
+      // props.history.push('/')
+      navigate('/')
     }
   }
 

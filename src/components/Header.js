@@ -4,7 +4,7 @@ import { Link, useLocation, Route } from 'react-router-dom'
 import { userLogOutAction } from '../redux/actions/userAction'
 import Dropdown from './admin/Dropdown'
 
-import logo from '../images/Logo.png'
+import logo from '../images/Capture.PNG'
 
 import Search from './Search'
 
@@ -157,7 +157,8 @@ const Header = () => {
                         <div className="header__menu__item header__menu__right__item">
                             {/* <i className="bx bx-search"></i> */}
 
-                            <Route render={({ history }) => <Search history={history} />}></Route>
+                            {/* <Route render={({ history }) => <Search history={history} />}></Route> */}
+                            <Search />
                         </div>
 
                         <div className="header__menu__item header__menu__right__item">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import GoogleLogin from 'react-google-login';
 
 import Helmet from '../components/Helmet'
@@ -10,10 +10,12 @@ import { userLoginAction } from '../redux/actions/userAction'
 const Login = (props) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const redirect = props.location.search ? props.location.search.split('=')[1] : '/';
-
+    const { search } = useLocation();
     const dispatch = useDispatch();
+    //get redirect params
+    const redirectURL = new URLSearchParams(search).get('redirect');
+    const redirect = redirectURL ? redirectURL : '/';
+    let navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -35,13 +37,13 @@ const Login = (props) => {
 
         if (userInfo) {
             if (userInfo.role === 'admin') {
-                props.history.push('/admin')
+                navigate('/admin')
             } else {
-                props.history.push(redirect);
+                navigate(redirect)
             }
         }
 
-    }, [props.history, redirect, userInfo]);
+    }, [redirect, userInfo]);
 
     return (
         <Helmet title="Đăng nhập">
