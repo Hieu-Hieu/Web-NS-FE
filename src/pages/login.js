@@ -27,7 +27,7 @@ const Login = (props) => {
     }
 
     const handleGGFailure = () => {
-        alert('Đăng nhập không thành công')
+        // alert('Đăng nhập không thành công')
     }
 
     const userSignin = useSelector(state => state.userSignin);
@@ -84,4 +84,4 @@ const Login = (props) => {
     )
 }
 
-export default Login
+export default Login;

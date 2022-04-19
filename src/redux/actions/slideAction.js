@@ -1,5 +1,6 @@
 import Axios from "axios";
 import { toast } from 'react-toastify';
+import slideApi from "../../api/slideApi";
 
 import {
   SLIDE_CREATE_FAIL, SLIDE_CREATE_REQUEST, SLIDE_CREATE_SUCCESS,
@@ -15,7 +16,7 @@ export const listSlides = () => async (dispatch) => {
   })
 
   try {
-    const { data } = await Axios.get('/v1/slide')
+    const data = await slideApi.getListSlides();
     dispatch({
       type: SLIDE_LIST_SUCCESS,
       payload: data
