@@ -20,7 +20,7 @@ const RoutesUser = () => {
   return (
     <Routes>
       <Route path="product/:id" element={<Product />} />
-      <Route path="cart/:id?" element={<Cart />} />
+      <Route path="cart" element={<Cart />} />
       <Route path="intro" element={<Intro />} />
       <Route path="contact" element={<Contact />} />
       <Route path="login" element={<Login />} />

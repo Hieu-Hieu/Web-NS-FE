@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import productApi from '../../api/productApi';
 import {
   CART_ADD_ITEM,
   CART_REMOVE_ITEM,
@@ -9,7 +10,8 @@ import { toast } from 'react-toastify';
 
 export const addToCart = (productId, qty) => async (dispatch, getState) => {
 
-  const { data } = await Axios.get(`/v1/products/${productId}`);
+  // const { data } = await Axios.get(`/v1/products/${productId}`);
+  const data = await productApi.getProductDetail(productId);
 
   let quantity = qty;
   if (qty > data.qty) {

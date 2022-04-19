@@ -87,7 +87,9 @@ export const listProductCategories = () => async (dispatch) => {
     type: PRODUCT_CATEGORY_LIST_REQUEST,
   });
   try {
-    const { data } = await Axios.get(`/api/products/categories`);
+    const data = await productApi.getProductCategories();
+    console.log(data)
+    // const { data } = await Axios.get(`/api/products/categories`);
     dispatch({ type: PRODUCT_CATEGORY_LIST_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: PRODUCT_CATEGORY_LIST_FAIL, payload: error.message });
@@ -98,7 +100,7 @@ export const detailsProduct = (productId) => async (dispatch) => {
   dispatch({ type: PRODUCT_DETAILS_REQUEST, payload: productId });
 
   try {
-    const { data } = await Axios.get(`/v1/products/${productId}`);
+    const data = await productApi.getProductDetail(productId);
     dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -115,7 +117,7 @@ export const topProductAction = () => async (dispatch) => {
   dispatch({ type: TOP_PRODUCTS_REQUEST });
 
   try {
-    const { data } = await Axios.get("v1/products/top-product");
+    const data = await productApi.getTopProducts();
     dispatch({ type: TOP_PRODUCTS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: TOP_PRODUCTS_FAIL, payload: error.message });
@@ -126,9 +128,7 @@ export const topProductsRelate = (productId) => async (dispatch) => {
   dispatch({ type: TOP_PRODUCTS_RELATE_REQUEST });
 
   try {
-    const { data } = await Axios.get(
-      `/v1/products/product-related/${productId}`
-    );
+    const data = await productApi.getTopProductsRelate(productId);
     dispatch({ type: TOP_PRODUCTS_RELATE_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: TOP_PRODUCTS_RELATE_FAIL, payload: error.message });

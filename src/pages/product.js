@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import Helmet from '../components/Helmet'
 import Section, { SectionBody, SectionTitle } from '../components/Section'
@@ -11,9 +11,10 @@ import { detailsProduct, topProductsRelate } from '../redux/actions/productActio
 import Loading from '../components/Loading'
 
 
-const Product = props => {
+const Product = () => {
     const dispatch = useDispatch()
-    const productId = props.match.params.id
+    const params = useParams();
+    const productId = params.id;
 
     const productDetail = useSelector(state => state.productDetail)
     const { loading, error, product } = productDetail

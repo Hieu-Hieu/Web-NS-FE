@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 
 import Helmet from '../components/Helmet'
 import Button from '../components/Button'
@@ -11,11 +11,11 @@ import numberWithCommas from '../utils/numberWithCommas'
 import { addToCart, removeFromCart } from '../redux/actions/cartActions'
 
 const Cart = (props) => {
-
-    const productId = props.match.params.id;
-    const qty = props.location.search
-        ? Number(props.location.search.split('=')[1])
-        : 1;
+    const params = useParams();
+    const productId = params.id;
+    const { search } = useLocation();
+    const qtyUrl = new URLSearchParams(search).get('qty')
+    const qty = qtyUrl ? Number(qtyUrl) : 1;
     const cart = useSelector((state) => state.cart);
     const { cartItems, error } = cart;
     const userSignin = useSelector(state => state.userSignin);
