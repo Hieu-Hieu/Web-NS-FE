@@ -22,6 +22,7 @@
         pointer-events: none;
         position: absolute;
         inset: 0;
+        height: 100%;
 
         @include tablet {
             flex-direction: column-reverse;

@@ -2,6 +2,7 @@ import Axios from 'axios'
 import { toast } from 'react-toastify';
 
 import * as b from '../constants/brandConstants'
+import brandApi from '../../api/brandApi';
 
 export const addBrandAction = (brand) => async (dispatch, getState) => {
   try {
@@ -82,7 +83,7 @@ export const listBrandAction = () => async (dispatch) => {
   dispatch({ type: b.BRAND_LIST_REQUEST });
 
   try {
-    const { data } = await Axios.get('/v1/brand');
+    const data = await brandApi.getBrands()
     dispatch({ type: b.BRAND_LIST_SUCCESS, payload: data })
 
   } catch (error) {

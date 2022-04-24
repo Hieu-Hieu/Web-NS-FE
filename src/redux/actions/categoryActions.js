@@ -8,12 +8,13 @@ import {
   CATEGORY_DETAILS_FAIL, CATEGORY_DETAILS_SUCCESS, CATEGORY_DETAILS_REQUEST,
 
 } from "../constants/categoryConstants";
+import categoryApi from '../../api/categoryApi';
 
 export const categoryAction = () => async (dispatch) => {
   dispatch({ type: CATEGORY_LIST_REQUEST });
 
   try {
-    const { data } = await Axios.get('/v1/category');
+    const data = await categoryApi.getCategories();
     dispatch({ type: CATEGORY_LIST_SUCCESS, payload: data })
 
   } catch (error) {

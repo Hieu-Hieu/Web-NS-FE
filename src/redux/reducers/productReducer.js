@@ -40,6 +40,7 @@ export const producListtWithConditionReducer = (
     case PRODUCT_LIST_WITH_CONDITION_REQUEST:
       return { loading: true };
     case PRODUCT_LIST_WITH_CONDITION_SUCCESS:
+      console.log(action.payload.products)
       return {
         loading: false,
         products: action.payload.products,

@@ -5,7 +5,7 @@ import Grid from './Grid'
 import ProductCard from './ProductCard'
 // import Loading from './Loading'
 
-const InfinityList = ({ loading, error, products, page, pages }) => {
+const InfinityList = ({ loading, error, products }) => {
 
     // const perLoad = 6 // items each load
 
@@ -78,10 +78,6 @@ const InfinityList = ({ loading, error, products, page, pages }) => {
             </Grid>
         </div>
     )
-}
-
-InfinityList.propTypes = {
-    data: PropTypes.array.isRequired
 }
 
 export default InfinityList

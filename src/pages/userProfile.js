@@ -1,12 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 
 import { detailsUser, updateUserProfile } from '../redux/actions/userAction';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const UserProfile = ({ history }) => {
+const UserProfile = () => {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -17,6 +18,7 @@ const UserProfile = ({ history }) => {
   const [phone, setPhone] = useState('');
   const [matchedPassword, setMatchedPassword] = useState(true);
   const [image, setImage] = useState('');
+  const navigate = useNavigate();
 
   const myInfo = useSelector(state => state.userSignin);
   const { userInfo } = myInfo;
@@ -33,10 +35,10 @@ const UserProfile = ({ history }) => {
   useEffect(() => {
 
     if (!userInfo) {
-      history.push('/login')
+      navigate('/login')
     } else {
       if (userInfo && userInfo.role === 'admin') {
-        history.push('/admin')
+        navigate('/admin')
       }
       else if (!user) {
         dispatch(detailsUser(userInfo._id));
@@ -51,7 +53,7 @@ const UserProfile = ({ history }) => {
     }
 
     // }
-  }, [dispatch, userInfo, user, history])
+  }, [dispatch, userInfo, user])
 
   const handleSubmit = (e) => {
     e.preventDefault();

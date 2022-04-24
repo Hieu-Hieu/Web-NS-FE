@@ -46,41 +46,29 @@ export const listProducts =
         type: PRODUCT_LIST_REQUEST,
       });
       try {
-        // const { data } = await Axios.get(
-        //   `/v1/products?pageNumber=${pageNumber}&name=${name}&category=${category}&certificate=${certificate}&min=${min}&max=${max}&brand=${brand}`
-        // );
-        const data = await productApi.getAllProducts({});
+        const data = await productApi.getAllProducts({ pageNumber, name, category, certificate, min, max, brand });
         dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
       } catch (error) {
         dispatch({ type: PRODUCT_LIST_FAIL, payload: error.message });
       }
     };
 
-export const listProductsWithCondition =
-  ({
-    pageNumber = "",
-    name = "",
-    category = "",
-    certificate = "",
-    min = "",
-    max = "",
-  }) =>
-    async (dispatch) => {
+
+export const listProductsWithCondition = () =>
+  async (dispatch) => {
+    dispatch({
+      type: PRODUCT_LIST_WITH_CONDITION_REQUEST,
+    });
+    try {
+      const data = await productApi.getAllProducts({ certificate: 'VietGAP' });
+      dispatch({ type: PRODUCT_LIST_WITH_CONDITION_SUCCESS, payload: data });
+    } catch (error) {
       dispatch({
-        type: PRODUCT_LIST_WITH_CONDITION_REQUEST,
+        type: PRODUCT_LIST_WITH_CONDITION_FAIL,
+        payload: error.message,
       });
-      try {
-        const { data } = await Axios.get(
-          `/v1/products?pageNumber=${pageNumber}&name=${name}&category=${category}&certificate=${certificate}&min=${min}&max=${max}`
-        );
-        dispatch({ type: PRODUCT_LIST_WITH_CONDITION_SUCCESS, payload: data });
-      } catch (error) {
-        dispatch({
-          type: PRODUCT_LIST_WITH_CONDITION_FAIL,
-          payload: error.message,
-        });
-      }
-    };
+    }
+  };
 
 export const listProductCategories = () => async (dispatch) => {
   dispatch({

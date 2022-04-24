@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const SearchPriceBox = ({ getFilterUrl }) => {
+const SearchPriceBox = ({ handleSearch }) => {
   const styles = {
     height: '30px',
     width: '62px',
@@ -35,23 +35,19 @@ const SearchPriceBox = ({ getFilterUrl }) => {
         <div style={{ width: '80%' }}>
           <input style={styles} placeholder="Từ" type="number"
             onChange={(e) => setMin(+(e.target.value))}
-          ></input>
+          />
           <span style={{ fontSize: '20px', padding: '0 5px' }}>-</span>
           <input style={styles} placeholder="Đến" type="number"
             onChange={(e) => setmax(+(e.target.value))}
-          ></input>
-          <Link
-            to={getFilterUrl({ min: min, max: max })}
-            style={apply}
+          />
+          <div
+            onClick={() => handleSearch({ min: min, max: max })}
           >
             Áp dụng
-          </Link>
+          </div>
         </div>
-
       </div>
-
-
-    </div>
+    </div >
   )
 }
 

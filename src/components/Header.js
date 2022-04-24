@@ -17,14 +17,6 @@ const mainNav = [
         display: "Sản phẩm",
         path: "/catalog"
     },
-    {
-        display: "Giới thiệu",
-        path: "/intro"
-    },
-    {
-        display: "Liên hệ",
-        path: "/contact"
-    }
 ]
 
 const Header = () => {
@@ -129,7 +121,9 @@ const Header = () => {
         <div className="header" ref={headerRef}>
             <div className="container">
                 <div className="header__logo" style={{ height: '100%' }}>
-                    <img src={logo} alt="#" style={{ width: '60px', borderRadius: '50%' }} />
+                    <Link to="/">
+                        <img src={logo} alt="#" style={{ width: '60px', borderRadius: '50%' }} />
+                    </Link>
                 </div>
                 <div className="header__menu">
                     <div className="header__menu__mobile-toggle" onClick={menuToggle}>

@@ -1,4 +1,3 @@
-import Axios from 'axios';
 import { toast } from 'react-toastify';
 import {
   USER_SIGNIN_REQUEST, USER_SIGNIN_SUCCESS, USER_SIGNIN_FAIL,
@@ -10,6 +9,7 @@ import {
   USER_RESET_PASSWORD_REQUEST, USER_RESET_PASSWORD_SUCCESS, USER_RESET_PASSWORD_FAIL,
   USER_FOGOT_PASSWORD_REQUEST, USER_FOGOT_PASSWORD_SUCCESS, USER_FOGOT_PASSWORD_FAIL,
 } from "../constants/userConstansts";
+import userApi from '../../api/userApi';
 
 export const userLoginAction = (data) => async (dispatch) => {
   const { email, password, token, ggId } = data
@@ -17,12 +17,12 @@ export const userLoginAction = (data) => async (dispatch) => {
   dispatch({ type: USER_SIGNIN_REQUEST, payload: email });
   try {
     if (token && ggId) {
-      const { data } = await Axios.post('/v1/user/googleLogin', { token, ggId });
+      const data = await userApi.googleLogin(token, ggId);
       dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
       localStorage.setItem('userInfo', JSON.stringify(data));
 
     } else {
-      const { data } = await Axios.post('/v1/user/login', { email, password });
+      const data = await userApi.loginWithPassword(email, password);
       dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
       localStorage.setItem('userInfo', JSON.stringify(data));
     }
@@ -45,19 +45,11 @@ export const userLogOutAction = () => (dispatch) => {
   document.location.href = "/";
 }
 
-export const listUserAction = ({ pageNumber = 1, keyword = '' }) => async (dispatch, getState) => {
+export const listUserAction = ({ pageNumber = 1, keyword = '' }) => async (dispatch) => {
   dispatch({ type: USER_LIST_REQUEST });
-  const {
-    userSignin: { userInfo },
-  } = getState();
 
-  const config = {
-    headers: {
-      Authorization: `Bearer ${userInfo.token}`,
-    },
-  }
   try {
-    const { data } = await Axios.get(`/v1/user?pageNumber=${pageNumber}&keyword=${keyword}`, config);
+    const data = await userApi.getAllUsers(pageNumber, keyword);
     dispatch({ type: USER_LIST_SUCCESS, payload: data })
   } catch (error) {
     dispatch({
@@ -70,19 +62,11 @@ export const listUserAction = ({ pageNumber = 1, keyword = '' }) => async (dispa
   }
 }
 
-export const detailsUser = (userId) => async (dispatch, getState) => {
+export const detailsUser = (userId) => async (dispatch) => {
   dispatch({ type: USER_DETAILS_REQUEST, payload: userId });
-  const {
-    userSignin: { userInfo },
-  } = getState();
-  try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    }
-    const { data } = await Axios.get(`/v1/user/profile/${userId}`, config);
 
+  try {
+    const data = await userApi.getUserById(userId);
     dispatch({ type: USER_DETAILS_SUCCESS, payload: data });
   } catch (error) {
     const message =
@@ -93,18 +77,10 @@ export const detailsUser = (userId) => async (dispatch, getState) => {
   }
 };
 
-export const deleteUser = (userId) => async (dispatch, getState) => {
+export const deleteUser = (userId) => async (dispatch) => {
   dispatch({ type: USER_DELETE_REQUEST, payload: userId });
-  const {
-    userSignin: { userInfo },
-  } = getState();
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    }
-    const { data } = await Axios.delete(`/api/users/${userId}`, config);
+    const data = await userApi.deleteUser(userId);
     dispatch({ type: USER_DELETE_SUCCESS, payload: data });
   } catch (error) {
     const message =
@@ -115,10 +91,10 @@ export const deleteUser = (userId) => async (dispatch, getState) => {
   }
 };
 
-export const register = (value) => async (dispatch) => {
+export const register = (userInfo) => async (dispatch) => {
   dispatch({ type: USER_REGISTER_REQUEST });
   try {
-    const { data } = await Axios.post('/v1/user/register', value);
+    const data = await userApi.register(userInfo);
     dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
     dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
     localStorage.setItem('userInfo', JSON.stringify(data));
@@ -133,15 +109,11 @@ export const register = (value) => async (dispatch) => {
   }
 };
 
-export const updateUserProfile = (user) => async (dispatch, getState) => {
+export const updateUserProfile = (user) => async (dispatch) => {
   dispatch({ type: USER_UPDATE_PROFILE_REQUEST, payload: user });
-  const {
-    userSignin: { userInfo },
-  } = getState();
+
   try {
-    const { data } = await Axios.put('/v1/user/profile', user, {
-      headers: { Authorization: `Bearer ${userInfo.token}` },
-    });
+    const data = await userApi.updateProfile(user);
     dispatch({ type: USER_UPDATE_PROFILE_SUCCESS });
     localStorage.setItem('userInfo', JSON.stringify(data));
     dispatch(detailsUser(user._id))
@@ -161,8 +133,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
 export const resetPassword = (value) => async (dispatch) => {
   dispatch({ type: USER_RESET_PASSWORD_REQUEST });
   try {
-    const { data } = await Axios.post('/v1/user/reset-password', value);
-    console.log(data)
+    const data = await userApi.resetPassword(value)
 
     dispatch({ type: USER_RESET_PASSWORD_SUCCESS, payload: data });
   } catch (error) {
@@ -179,7 +150,7 @@ export const resetPassword = (value) => async (dispatch) => {
 export const fogotPassword = ({ email }) => async (dispatch) => {
   dispatch({ type: USER_FOGOT_PASSWORD_REQUEST });
   try {
-    const { data } = await Axios.post('/v1/user/send-code-reset-password', { email });
+    const data = await userApi.fogotPassword(email);
     dispatch({ type: USER_FOGOT_PASSWORD_SUCCESS, payload: data });
   } catch (error) {
     dispatch({

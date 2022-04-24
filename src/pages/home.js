@@ -1,25 +1,21 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-
 import Helmet from '../components/Helmet'
 import HeroSlider from '../components/HeroSlider'
 import Section, { SectionTitle, SectionBody } from '../components/Section'
 import PolicyCard from '../components/PolicyCard'
 import Grid from '../components/Grid'
 import ProductCard from '../components/ProductCard'
-
 import policy from '../fakedata/policy'
-
 import { listProducts, topProductAction, listProductsWithCondition } from '../redux/actions/productActions'
 import { listSlides } from '../redux/actions/slideAction'
-
 import banner from '../images/sale1.png'
 
 
 const bannerStyle = {
     margin: '0 auto',
-    height: '629px',
+    height: '360px',
     width: '1920px'
 }
 
@@ -44,20 +40,18 @@ const Home = () => {
         slides,
     } = slideList;
 
-    const listproductByCertification = useSelector(state => state.productListWithContidion);
+    const productVietGap = useSelector(state => state.productListWithContidion)
     const {
-        loading: loadingProductCertification,
-        error: errorProductCertification,
-        products: productsCertification,
-    } = listproductByCertification;
+        products: productVG,
+        loading: loadingVG,
+        error: errorVG
+    } = productVietGap;
 
     useEffect(() => {
-
         dispatch(listSlides())
         dispatch(topProductAction())
         dispatch(listProducts({}))
-        dispatch(listProductsWithCondition({ certificate: 'VietGAP' }))
-
+        dispatch(listProductsWithCondition())
     }, [dispatch])
 
 
@@ -111,7 +105,7 @@ const Home = () => {
                                     products === undefined || products.length === 0 ?
                                         <div className="text-center" style={{ height: '10vh', fontSize: '30px' }}>Không có sản phẩm nào</div> :
                                         <Grid
-                                            col={4}
+                                            col={5}
                                             mdCol={2}
                                             smCol={1}
                                             gap={20}
@@ -150,7 +144,7 @@ const Home = () => {
                                     topProducts1 === undefined || topProducts1.length === 0 ?
                                         <div className="text-center" style={{ height: '10vh', fontSize: '30px' }}>Không có sản phẩm nào</div> :
                                         <Grid
-                                            col={4}
+                                            col={5}
                                             mdCol={2}
                                             smCol={1}
                                             gap={20}
@@ -192,8 +186,8 @@ const Home = () => {
                     Sản phẩm VietGAP
                 </SectionTitle>
                 {
-                    loadingProductCertification ? <div>Loading...</div>
-                        : errorProductCertification ? <div>{errorProductCertification}</div> :
+                    loadingVG ? <div>Loading...</div>
+                        : errorVG ? <div>{errorVG}</div> :
                             <SectionBody>
                                 <Grid
                                     col={4}
@@ -202,7 +196,7 @@ const Home = () => {
                                     gap={20}
                                 >
                                     {
-                                        productsCertification ? (productsCertification.map((item, index) => (
+                                        productVG ? (productVG.map((item, index) => (
                                             <ProductCard
                                                 key={index}
                                                 img01={item.images[0]}

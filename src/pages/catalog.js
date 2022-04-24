@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Helmet from '../components/Helmet'
@@ -8,32 +8,53 @@ import InfinityList from '../components/InfinityList'
 import { listProducts } from '../redux/actions/productActions'
 import { listBrandAction } from '../redux/actions/brandActions'
 import { categoryAction } from '../redux/actions/categoryActions'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import SearchPriceBox from '../components/SearchPriceBox'
 import Loading from '../components/Loading'
 
-const Catalog = ({ history }) => {
-    const reset = {
-        display: 'block',
-        padding: '0px',
-        textAlign: 'center',
-        lineHeight: '30px',
-        width: '80%',
-        backgroundColor: '#39834b',
-        color: '#fff',
-        marginTop: '10px',
-        maxWidth: '140px',
-    }
+const certificates = [{ name: 'Hữu cơ', id: 1 }, { name: 'VietGAP', id: 2 }, { name: 'GlobalGAP', id: 3 }]
 
-    const {
-        name = 'all',
-        category = 'all',
-        min = 0,
-        max = 0,
-        certificate = 'all',
-        pageNumber = 1,
-        brand = 'all',
-    } = useParams();
+const reset = {
+    display: 'block',
+    padding: '0px',
+    textAlign: 'center',
+    lineHeight: '30px',
+    width: '80%',
+    backgroundColor: '#39834b',
+    color: '#fff',
+    marginTop: '10px',
+    maxWidth: '140px',
+}
+
+const getSearchParams = (searchParams) => {
+    let params = {}
+    if (searchParams) {
+        for (var pair of searchParams.entries()) {
+            params = {
+                ...params,
+                [pair[0]]: pair[1],
+            }
+            console.log(params)
+        }
+    }
+    return params
+}
+
+const toSearchPramString = (p) => {
+    if (Object.entries(p).length > 0) {
+        const queryString = new URLSearchParams(p);
+        return queryString.toString();
+    }
+    return "";
+}
+
+const Catalog = () => {
+    const { search, pathname } = useLocation()
+
+    const [query, setQuery] = useState(() => {
+        const searchParams = new URLSearchParams(search.slice(1));
+        return getSearchParams(searchParams)
+    });
 
     const dispatch = useDispatch();
     const productsList = useSelector(state => state.productList)
@@ -45,36 +66,27 @@ const Catalog = ({ history }) => {
     const brandsList = useSelector(state => state.brandsList)
     const { loading: loadingBrand, error: errorBrand, brands } = brandsList
 
-    const certificates = ['Hữu cơ', 'VietGAP', 'GlobalGAP']
+    const navigate = useNavigate()
 
     useEffect(() => {
-        // updateProducts()
+        if (Object.entries(query).length !== 0) {
+            let p = pathname + '?' + toSearchPramString(query);
+            console.log('navigate')
+            navigate(p)
+        }
+
+    }, [query])
+
+    useEffect(() => {
+
         dispatch(categoryAction())
         dispatch(listBrandAction())
-        dispatch(listProducts({
-            pageNumber,
-            name: name !== 'all' ? name : '',
-            category: category !== 'all' ? category : '',
-            certificate: certificate !== 'all' ? certificate : '',
-            min,
-            max,
-            brand,
-        }))
-    }, [dispatch, category, name, pageNumber, certificate, min, max, brand])
+        dispatch(listProducts(query))
+    }, [dispatch])
 
     const filterRef = useRef(null)
 
     const showHideFilter = () => filterRef.current.classList.toggle('active')
-    const getFilterUrl = (filter) => {
-        const filterPage = filter.page || pageNumber;
-        const filterCategory = filter.category || category;
-        const filterBrand = filter.brand || brand;
-        const filterName = filter.name || name;
-        const filterCertificate = filter.certificate || certificate;
-        const filterMin = filter.min ? filter.min : filter.min === 0 ? 0 : min;
-        const filterMax = filter.max ? filter.max : filter.max === 0 ? 0 : max;
-        return `/catalog/category/${filterCategory}/name/${filterName}/certificate/${filterCertificate}/min/${filterMin}/max/${filterMax}/pageNumber/${filterPage}/brand/${filterBrand}`;
-    };
 
     const pageNumberArr = [];
     if (pages) {
@@ -102,12 +114,12 @@ const Catalog = ({ history }) => {
                                         categories.map((item) => (
                                             <div key={item._id} className="catalog__filter__widget__content__item">
 
-                                                <span className={item._id === category ? 'active' : ''}
+                                                <span className={item._id === query.category ? 'active' : ''}
                                                     onClick={() => {
-                                                        if (category === 'all' || category !== item._id)
-                                                            history.push(getFilterUrl({ category: item._id }))
+                                                        if (query.category === 'all' || query.category !== item._id)
+                                                            setQuery({ ...query, category: item._id })
                                                         else
-                                                            history.push(getFilterUrl({ category: 'all' }))
+                                                            setQuery({ ...query, category: 'all' })
                                                     }
                                                     }
                                                 >
@@ -129,16 +141,13 @@ const Catalog = ({ history }) => {
                                     : !brands ? <div></div> :
                                         brands.map((item) => (
                                             <div key={item._id} className="catalog__filter__widget__content__item">
-                                                {/* <Link className={item._id === brand ? 'active' : ''}
-                                                    to={() => getFilterUrl({ brand: item._id })}>
-                                                    {item.name}
-                                                </Link> */}
-                                                <span className={item._id === brand ? 'active' : ''}
+                                                <span className={item._id === query.brand ? 'active' : ''}
                                                     onClick={() => {
-                                                        if (brand === 'all' || brand !== item._id)
-                                                            history.push(getFilterUrl({ brand: item._id }))
+                                                        if (query.brand === 'all' || query.brand !== item._id)
+                                                            setQuery({ ...query, brand: item._id })
                                                         else
-                                                            history.push(getFilterUrl({ brand: 'all' }))
+                                                            setQuery({ ...query, brand: 'all' })
+
                                                     }
                                                     }
                                                 >
@@ -155,26 +164,25 @@ const Catalog = ({ history }) => {
                         </div>
                         {!certificates ? <div></div> :
                             certificates.map(x =>
-                                <div className="catalog__filter__widget__content">
+                                <div key={x.id} className="catalog__filter__widget__content">
                                     <div className="catalog__filter__widget__content__item">
-
-                                        <span className={certificate === x ? 'active' : ''}
+                                        <span className={query.certificate === x.name ? 'active' : ''}
                                             onClick={() => {
-                                                if (certificate === 'all' || certificate !== x)
-                                                    history.push(getFilterUrl({ certificate: x }))
+                                                if (query.certificate === 'all' || query.certificate !== x.name)
+                                                    setQuery({ ...query, certificate: x.name })
                                                 else
-                                                    history.push(getFilterUrl({ certificate: 'all' }))
+                                                    setQuery({ ...query, certificate: 'all' })
                                             }
                                             }
                                         >
-                                            {x}
+                                            {x.name}
                                         </span>
                                     </div>
                                 </div>
                             )
                         }
                     </div>
-                    <SearchPriceBox getFilterUrl={getFilterUrl} />
+                    <SearchPriceBox handleSearch={setQuery} />
 
                     <div>
                         <Link to="/catalog" style={reset}>
@@ -205,22 +213,22 @@ const Catalog = ({ history }) => {
                             >Trang trước</Link>
                         </li>
                         :
-                        <li className="paginate__list-item">
-
-                            <Link to={getFilterUrl({ page: pageNumber - 1 })}>Trang trước</Link>
+                        <li className="paginate__list-item"
+                            onClick={() => setQuery({ ...query, page: query.pageNumber - 1 })}
+                        >
+                            Trang trước
                         </li>
                     }
                     {pageNumberArr.map((number) => {
                         if (number === page) {
-                            return <li className="paginate__list-item">
+                            return <li key={number} className="paginate__list-item">
                                 <button className="active">{number}</button>
                             </li>
                         } else {
-                            return <li className="paginate__list-item">
-                                {/* <button onClick={() => handlePageChange(number)}>{number}</button> */}
-                                {/* <Link to={`/catalog/pageNumber/${number}`}>{number}</Link> */}
-                                <Link to={getFilterUrl({ page: number })}>{number}</Link>
-
+                            return <li key={number} className="paginate__list-item"
+                                onClick={() => setQuery({ ...query, pageNumber: number })}
+                            >
+                                {number}
                             </li>
                         }
                     })
@@ -234,9 +242,10 @@ const Catalog = ({ history }) => {
                             >Trang sau</Link>
                         </li>
                         :
-                        <li className="paginate__list-item">
-
-                            <Link to={getFilterUrl({ page: +pageNumber + 1 })}>Trang sau</Link>
+                        <li className="paginate__list-item"
+                            onClick={() => setQuery({ ...query, page: query.pageNumber - 1 })}
+                        >
+                            Trang sau
                         </li>
                     }
                 </ul>
