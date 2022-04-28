@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
 import Button from './Button'
@@ -62,13 +61,6 @@ const HeroSlider = props => {
             }
         </div>
     )
-}
-
-HeroSlider.propTypes = {
-    data: PropTypes.array.isRequired,
-    control: PropTypes.bool,
-    auto: PropTypes.bool,
-    timeOut: PropTypes.number
 }
 
 const HeroSliderItem = props => (

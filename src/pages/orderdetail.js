@@ -14,9 +14,12 @@ import { PayPalButton } from "react-paypal-button-v2";
 import { ORDER_PAY_RESET } from "../redux/constants/orderConstants";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate, useParams } from "react-router-dom";
 
-const OrderDetail = ({ history, match }) => {
-  const orderId = match.params.id;
+const OrderDetail = () => {
+
+  const params = useParams();
+  const orderId = params.id;
 
   const myInfo = useSelector((state) => state.userSignin);
   const { userInfo } = myInfo;
@@ -30,10 +33,10 @@ const OrderDetail = ({ history, match }) => {
   const dispatch = useDispatch();
 
   let link = "/order-history";
-
+  const navigate = useNavigate()
   useEffect(() => {
     if (!userInfo) {
-      history.push("/login");
+      navigate("/login");
     } else {
       const addPayPalScript = async () => {
         const { data } = await axios.get("/v1/config/paypal");
@@ -69,7 +72,7 @@ const OrderDetail = ({ history, match }) => {
     //     console.log('134')
     //   }
     // }
-  }, [dispatch, userInfo, history, orderId, sdkReady, order]);
+  }, [dispatch, userInfo, orderId, sdkReady, order]);
 
   const successPaymentHnadler = (paymentResult) => {
     console.log(paymentResult);
@@ -151,7 +154,7 @@ const OrderDetail = ({ history, match }) => {
       />
 
       <div className="row">
-        <div className="col-8">
+        <div className="col-8 col-md-12 col-sm-12">
           <div className="card">
             <h3 style={{ marginBottom: "20px" }}>Chi tiết đơn hàng</h3>
             <p style={{ marginBottom: "4px" }}>
@@ -182,7 +185,7 @@ const OrderDetail = ({ history, match }) => {
             </div>
           </div>
         </div>
-        <div className="col-4">
+        <div className="col-4 col-md-12 col-sm-12">
           <div className="card">
             <div className="order__shipping">
               <div className="order__shipping-title">
@@ -283,7 +286,7 @@ const OrderDetail = ({ history, match }) => {
                 <button
                   className="order__button-checkout"
                   onClick={() => {
-                    history.push(link);
+                    navigate(link)
                   }}
                 >
                   Đơn hàng đã mua
@@ -291,7 +294,7 @@ const OrderDetail = ({ history, match }) => {
                 <button
                   className="order__button-checkout"
                   onClick={() => {
-                    history.push("/catalog");
+                    navigate("/catalog");
                   }}
                 >
                   Tiếp tục mua hàng

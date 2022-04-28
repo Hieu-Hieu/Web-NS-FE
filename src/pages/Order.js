@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react'
-
+import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Helmet from '../components/Helmet'
-
 import numberWithCommas from '../utils/numberWithCommas'
-import { } from '../styles/order.css'
-import axios from 'axios'
 import { createOrder } from '../redux/actions/orderAction'
+import { useNavigate } from 'react-router-dom'
 
 const Order = (props) => {
 
@@ -36,6 +34,8 @@ const Order = (props) => {
 
   let total = cartItems.reduce((a, c) => a + c.price * c.quantity, 0) + 30000;
 
+  const navigate = useNavigate()
+
   useEffect(() => {
     if (userInfo) {
       console.log(userInfo)
@@ -44,13 +44,13 @@ const Order = (props) => {
       setPhone(userInfo.phone)
       setMail(userInfo.email)
       if (order && Object.keys(order).length !== 0) {
-        props.history.push('/order-detail/' + order._id);
+        navigate('/order-detail/' + order._id)
       } else if (error) {
         alert('Đăt hàng không thành công, xin hãy đặt lại. Rất xin lỗi quý khách vì sự bất tiện này!')
       }
 
     } else {
-      props.history.push('/login?redirect=order');
+      navigate('/login?redirect=order');
     }
   }, [props.history, userInfo, order, cartItems, error])
 
@@ -267,7 +267,7 @@ const Order = (props) => {
 
             <div className="order__button">
               <button type="submit" className="order__button-checkout">Đặt hàng</button>
-              <button className="order__button-return" onClick={() => props.history.push('/catalog')}>Tiếp tục mua hàng</button>
+              <button className="order__button-return" onClick={() => navigate('/catalog')}>Tiếp tục mua hàng</button>
             </div>
             <div className="order__button">
               {loading && <div>Đang xử lý...</div>}

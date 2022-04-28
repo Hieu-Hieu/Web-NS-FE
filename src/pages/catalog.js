@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Helmet from '../components/Helmet'
@@ -8,7 +8,7 @@ import InfinityList from '../components/InfinityList'
 import { listProducts } from '../redux/actions/productActions'
 import { listBrandAction } from '../redux/actions/brandActions'
 import { categoryAction } from '../redux/actions/categoryActions'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import SearchPriceBox from '../components/SearchPriceBox'
 import Loading from '../components/Loading'
 
@@ -24,37 +24,15 @@ const reset = {
     color: '#fff',
     marginTop: '10px',
     maxWidth: '140px',
+    cursor: 'pointer',
 }
 
-const getSearchParams = (searchParams) => {
-    let params = {}
-    if (searchParams) {
-        for (var pair of searchParams.entries()) {
-            params = {
-                ...params,
-                [pair[0]]: pair[1],
-            }
-            console.log(params)
-        }
-    }
-    return params
-}
-
-const toSearchPramString = (p) => {
-    if (Object.entries(p).length > 0) {
-        const queryString = new URLSearchParams(p);
-        return queryString.toString();
-    }
-    return "";
-}
+const nextPreBtnDisable = { pointerEvents: 'none' }
 
 const Catalog = () => {
-    const { search, pathname } = useLocation()
 
-    const [query, setQuery] = useState(() => {
-        const searchParams = new URLSearchParams(search.slice(1));
-        return getSearchParams(searchParams)
-    });
+    const [searchParams, setSearchParams] = useSearchParams();
+    const params = Object.fromEntries([...searchParams]);
 
     const dispatch = useDispatch();
     const productsList = useSelector(state => state.productList)
@@ -69,19 +47,12 @@ const Catalog = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (Object.entries(query).length !== 0) {
-            let p = pathname + '?' + toSearchPramString(query);
-            console.log('navigate')
-            navigate(p)
-        }
-
-    }, [query])
+        dispatch(listProducts(params))
+    }, [searchParams, dispatch])
 
     useEffect(() => {
-
         dispatch(categoryAction())
         dispatch(listBrandAction())
-        dispatch(listProducts(query))
     }, [dispatch])
 
     const filterRef = useRef(null)
@@ -114,12 +85,13 @@ const Catalog = () => {
                                         categories.map((item) => (
                                             <div key={item._id} className="catalog__filter__widget__content__item">
 
-                                                <span className={item._id === query.category ? 'active' : ''}
+                                                <span className={item._id === params.category ? 'active' : ''}
                                                     onClick={() => {
-                                                        if (query.category === 'all' || query.category !== item._id)
-                                                            setQuery({ ...query, category: item._id })
+                                                        if (params.category === 'all' || params.category !== item._id)
+
+                                                            setSearchParams({ ...params, category: item._id })
                                                         else
-                                                            setQuery({ ...query, category: 'all' })
+                                                            setSearchParams({ ...params, category: 'all' })
                                                     }
                                                     }
                                                 >
@@ -141,12 +113,12 @@ const Catalog = () => {
                                     : !brands ? <div></div> :
                                         brands.map((item) => (
                                             <div key={item._id} className="catalog__filter__widget__content__item">
-                                                <span className={item._id === query.brand ? 'active' : ''}
+                                                <span className={item._id === params.brand ? 'active' : ''}
                                                     onClick={() => {
-                                                        if (query.brand === 'all' || query.brand !== item._id)
-                                                            setQuery({ ...query, brand: item._id })
+                                                        if (params.brand === 'all' || params.brand !== item._id)
+                                                            setSearchParams({ ...params, brand: item._id })
                                                         else
-                                                            setQuery({ ...query, brand: 'all' })
+                                                            setSearchParams({ ...params, brand: 'all' })
 
                                                     }
                                                     }
@@ -166,12 +138,12 @@ const Catalog = () => {
                             certificates.map(x =>
                                 <div key={x.id} className="catalog__filter__widget__content">
                                     <div className="catalog__filter__widget__content__item">
-                                        <span className={query.certificate === x.name ? 'active' : ''}
+                                        <span className={params.certificate === x.name ? 'active' : ''}
                                             onClick={() => {
-                                                if (query.certificate === 'all' || query.certificate !== x.name)
-                                                    setQuery({ ...query, certificate: x.name })
+                                                if (params.certificate === 'all' || params.certificate !== x.name)
+                                                    setSearchParams({ ...params, certificate: x.name })
                                                 else
-                                                    setQuery({ ...query, certificate: 'all' })
+                                                    setSearchParams({ ...params, certificate: 'all' })
                                             }
                                             }
                                         >
@@ -182,12 +154,15 @@ const Catalog = () => {
                             )
                         }
                     </div>
-                    <SearchPriceBox handleSearch={setQuery} />
+                    <SearchPriceBox params handleSearch={setSearchParams} />
 
-                    <div>
-                        <Link to="/catalog" style={reset}>
-                            Reset
-                        </Link>
+                    <div style={reset} onClick={() => {
+                        // alert('abx')
+                        setSearchParams({})
+                        // navigate('/catalog')
+                    }
+                    }>
+                        Xóa bộ lọc
                     </div>
                 </div>
                 <div className="catalog__filter__toggle">
@@ -206,27 +181,21 @@ const Catalog = () => {
             {/* <Pagination page={page} pages={pages} getFilterUrl={getFilterUrl} /> */}
 
             <div className="paginate">
-                <ul className="paginate__list">
-                    {page === 1 ?
-                        <li className="paginate__list-item">
-                            <Link to="#" style={{ cursor: 'default', backgroundColor: "#f5f5f5" }}
-                            >Trang trước</Link>
-                        </li>
-                        :
-                        <li className="paginate__list-item"
-                            onClick={() => setQuery({ ...query, page: query.pageNumber - 1 })}
-                        >
-                            Trang trước
-                        </li>
-                    }
+                <ul className='paginate__list'>
+                    <li className="paginate__list-item"
+                        style={(page <= 1) ? nextPreBtnDisable : {}}
+                        onClick={() => setSearchParams({ ...params, pageNumber: page - 1 })}
+                    >
+                        Trang trước
+                    </li>
                     {pageNumberArr.map((number) => {
                         if (number === page) {
-                            return <li key={number} className="paginate__list-item">
-                                <button className="active">{number}</button>
+                            return <li key={number} className="paginate__list-item active">
+                                {number}
                             </li>
                         } else {
                             return <li key={number} className="paginate__list-item"
-                                onClick={() => setQuery({ ...query, pageNumber: number })}
+                                onClick={() => setSearchParams({ ...params, pageNumber: number })}
                             >
                                 {number}
                             </li>
@@ -234,20 +203,15 @@ const Catalog = () => {
                     })
                     }
                     <li className="paginate__list-item">
-                        <button>...</button>
+                        <span>...</span>
                     </li>
-                    {page >= pages ?
-                        <li className="paginate__list-item">
-                            <Link to="#" style={{ cursor: 'default', backgroundColor: "#f5f5f5" }}
-                            >Trang sau</Link>
-                        </li>
-                        :
-                        <li className="paginate__list-item"
-                            onClick={() => setQuery({ ...query, page: query.pageNumber - 1 })}
-                        >
-                            Trang sau
-                        </li>
-                    }
+
+                    <li className="paginate__list-item"
+                        style={(page >= pages) ? nextPreBtnDisable : {}}
+                        onClick={() => setSearchParams({ ...params, pageNumber: page + 1 })}
+                    >
+                        Trang sau
+                    </li>
                 </ul>
             </div>
         </Helmet>

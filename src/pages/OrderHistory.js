@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 import Table from '../components/admin/Table'
 import { myOrders as myOrdersAction } from '../redux/actions/orderAction'
@@ -13,10 +14,10 @@ const OrderHistory = ({ history }) => {
   const { userInfo } = myInfo;
 
   const dispatch = useDispatch();
-
+  const navigate = useNavigate()
   useEffect(() => {
     if (!userInfo) {
-      history.push('/login')
+      navigate('/login')
     } else {
       dispatch(myOrdersAction())
     }
@@ -43,7 +44,7 @@ const OrderHistory = ({ history }) => {
       <td>{item.totalPrice && numberWithCommas(item.totalPrice)}đ</td>
       <td>{trangthai[item.status]}</td>
       <td style={{ cursor: 'pointer', color: 'GrayText' }}
-      ><span onClick={() => { history.push('/order-detail/' + item._id) }}>Chi tiết</span> </td>
+      ><span onClick={() => { navigate('/order-detail/' + item._id) }}>Chi tiết</span> </td>
     </tr>
   )
 

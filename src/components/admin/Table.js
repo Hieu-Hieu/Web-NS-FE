@@ -16,23 +16,7 @@ const Table = props => {
         }
     }
 
-    // if (props.limit !== undefined) {
-    //     let page = Math.floor(props.bodyData.length / Number(props.limit))
-    //     pages = props.bodyData.length % Number(props.limit) === 0 ? page : page + 1
-    //     range = [...Array(pages).keys()]
-    // }
-
     const [currPage, setCurrPage] = useState(props.page || 1)
-    // console.log(currPage)
-
-    // const selectPage = page => {
-    //     const start = Number(props.limit) * page
-    //     const end = start + Number(props.limit)
-
-    //     setDataShow(props.bodyData.slice(start, end))
-
-    //     setCurrPage(page)
-    // }
 
     return (
         <div>

@@ -18,7 +18,7 @@ const Layoutadmin = () => {
         <>
             {
                 userInfo && userInfo.role === 'admin' ?
-                    <>
+                    <div className='layout__admin'>
                         <Sidebar />
                         <div className="layout__content">
                             <Topnav />
@@ -27,7 +27,7 @@ const Layoutadmin = () => {
                             </div>
                         </div>
 
-                    </>
+                    </div>
                     : navigate("/login")
             }
         </>

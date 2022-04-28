@@ -8,10 +8,11 @@ import PolicyCard from '../components/PolicyCard'
 import Grid from '../components/Grid'
 import ProductCard from '../components/ProductCard'
 import policy from '../fakedata/policy'
-import { listProducts, topProductAction, listProductsWithCondition } from '../redux/actions/productActions'
 import { listSlides } from '../redux/actions/slideAction'
 import banner from '../images/sale1.png'
-
+import { listProducts, topProductAction, listProductsWithCondition } from '../redux/actions/productActions'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const bannerStyle = {
     margin: '0 auto',
@@ -52,13 +53,19 @@ const Home = () => {
         dispatch(topProductAction())
         dispatch(listProducts({}))
         dispatch(listProductsWithCondition())
+        toast.warning("Lưu ý: Đây là website phục vụ mục đích học tập. KHÔNG phải website bán hàng online!!! Cảm ơn bạn đã ghé qua (^_^)");
     }, [dispatch])
-
 
     return (
         <Helmet title="Trang chủ">
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={true}
+                newestOnTop={false}
+            />
             {/* hero slider */}
-            {loadingSlides ? <div>Loading...</div> : errorSlides ? <div>{errorSlides}</div> :
+            {loadingSlides ? <div></div> : errorSlides ? <div>{errorSlides}</div> :
                 <HeroSlider
                     data={slides}
                     control={true}
@@ -98,7 +105,7 @@ const Home = () => {
                     Sản phẩm mới
                 </SectionTitle>
                 {
-                    loading ? <div>Loading...</div>
+                    loading ? <div></div>
                         : error ? <div>{error}</div> :
                             <SectionBody>
                                 {

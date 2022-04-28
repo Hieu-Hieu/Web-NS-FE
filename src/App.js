@@ -1,8 +1,4 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route
-} from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Layoutuser from "./pages/Layoutuser";
 import Layoutadmin from "./pages/admin/LayoutAdmin";

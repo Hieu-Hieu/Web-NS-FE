@@ -2,16 +2,15 @@ import axios from "axios";
 import queryString from "query-string";
 
 const axiosClient = axios.create({
-  // baseURL: process.env.REACT_APP_API_URL,
-  baseURL: 'http://localhost:5000/v1',
+  baseURL: process.env.REACT_APP_API_URL,
+  // baseURL: 'http://localhost:5000/v1',
   headers: {
     "content-type": "application/json",
   },
   paramsSerializer: (params) => queryString.stringify(params),
 });
 
-const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-console.log(userInfo.token)
+// const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
 axiosClient.interceptors.request.use(async (config) => {
   let userInfo = localStorage.getItem("userInfo");

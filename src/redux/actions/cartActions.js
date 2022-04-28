@@ -1,4 +1,3 @@
-import Axios from 'axios';
 import productApi from '../../api/productApi';
 import {
   CART_ADD_ITEM,

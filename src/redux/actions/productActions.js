@@ -1,4 +1,3 @@
-import Axios from "axios";
 import { toast } from "react-toastify";
 import productApi from "../../api/productApi";
 import {
@@ -125,24 +124,13 @@ export const topProductsRelate = (productId) => async (dispatch) => {
 
 export const listProductsAdmin =
   ({ pageNumber = 1, keyword }) =>
-    async (dispatch, getState) => {
-      console.log(keyword);
+    async (dispatch) => {
       dispatch({
         type: PRODUCT_LIST_REQUEST,
       });
-      const {
-        userSignin: { userInfo },
-      } = getState();
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
+
       try {
-        const { data } = await Axios.get(
-          `/v1/products/admin/search?pageNumber=${pageNumber}&keyword=${keyword}`,
-          config
-        );
+        const data = await productApi.getProductsAdmin(pageNumber, keyword);
         dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
       } catch (error) {
         dispatch({ type: PRODUCT_LIST_FAIL, payload: error.message });
@@ -152,18 +140,8 @@ export const listProductsAdmin =
 export const addProductAction = (product) => async (dispatch, getState) => {
   try {
     dispatch({ type: PRODUCT_CREATE_REQUEST });
-    const {
-      userSignin: { userInfo },
-    } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await Axios.post("/v1/products", product, config);
-
+    const data = await productApi.addProduct(product);
     dispatch({ type: PRODUCT_CREATE_SUCCESS, payload: data });
     toast.success("Thêm sản phẩm thành công");
   } catch (error) {
@@ -179,22 +157,8 @@ export const addProductAction = (product) => async (dispatch, getState) => {
 export const updateProductAction = (product) => async (dispatch, getState) => {
   try {
     dispatch({ type: PRODUCT_UPDATE_REQUEST });
-    const {
-      userSignin: { userInfo },
-    } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await Axios.put(
-      `/v1/products/${product._id}`,
-      product,
-      config
-    );
-
+    const data = await productApi.updateProduct(product);
     dispatch({ type: PRODUCT_UPDATE_SUCCESS, payload: data });
     toast.success("Cập nhật sản phẩm thành công");
   } catch (error) {
@@ -208,20 +172,11 @@ export const updateProductAction = (product) => async (dispatch, getState) => {
 };
 
 export const deleteProductAction =
-  (id, pageNumber) => async (dispatch, getState) => {
+  (id, pageNumber) => async (dispatch) => {
     try {
       dispatch({ type: PRODUCT_DELETE_REQUEST });
-      const {
-        userSignin: { userInfo },
-      } = getState();
 
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
-
-      const { data } = await Axios.delete(`/v1/products/${id}`, config);
+      const data = await productApi.deleteProduct(id);
 
       dispatch({ type: PRODUCT_DELETE_SUCCESS, payload: data });
       dispatch(

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 
-const SearchPriceBox = ({ handleSearch }) => {
+const SearchPriceBox = ({ params, handleSearch }) => {
   const styles = {
     height: '30px',
     width: '62px',
@@ -19,6 +18,7 @@ const SearchPriceBox = ({ handleSearch }) => {
     display: 'block',
     textAlign: 'center',
     maxWidth: '140px',
+    cursor: 'pointer',
 
   }
 
@@ -41,7 +41,8 @@ const SearchPriceBox = ({ handleSearch }) => {
             onChange={(e) => setmax(+(e.target.value))}
           />
           <div
-            onClick={() => handleSearch({ min: min, max: max })}
+            onClick={() => handleSearch({ ...params, min: min, max: max })}
+            style={apply}
           >
             Áp dụng
           </div>

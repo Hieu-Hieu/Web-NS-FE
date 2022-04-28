@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import Grid from './Grid'
 
-import logo from '../images/logo__txt.PNG'
+import logo from '../images/Capture.PNG'
 
 const footerAboutLinks = [
     {
@@ -102,9 +102,9 @@ const Footer = () => {
                         <p>
                             Mã số thuế: 00000000 <br />
                             Địa chỉ Nông trại: Số 1 Võ Văn Ngân <br />
-                            Email: nongsansach@gmail.com <br />
-                            Shopee: Nông Sảnh Sạch <br />
-                            Fanpage: Nông Sản Sạch
+                            Email: Hfood@gmail.com <br />
+                            Shopee: Hfood <br />
+                            Fanpage: Hfoof
                         </p>
                     </div>
                 </Grid>

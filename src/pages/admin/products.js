@@ -3,15 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import numberWithCommas from '../../utils/numberWithCommas'
-
-
 import Table from '../../components/admin/Table'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { listProductsAdmin, deleteProductAction } from '../../redux/actions/productActions'
 
 const Products = ({ history }) => {
-
     const dispatch = useDispatch();
     const productsList = useSelector(state => state.productList)
     const { loading, error, products, page, pages } = productsList
@@ -67,36 +64,6 @@ const Products = ({ history }) => {
         'Xóa'
     ]
 
-
-    const renderHead = (item, index) => <th key={index}>{item}</th>
-
-    const renderBody = (item, index) => (
-        <tr key={index}>
-            <td>{index + 1}</td>
-            <td><img src={item.images[0]} alt="Hình ảnh"
-                style={{ maxWidth: '40px' }}
-            /></td>
-            <td style={{ minWidth: '110px' }}>{item.name}</td>
-            <td style={{ minWidth: '110px' }} >{(item.category && item.category.name) || ''}</td>
-            <td>{numberWithCommas(item.price)}</td>
-            {/* <td>{item.discount + '%'}</td> */}
-            <td>{item.qtyInStock}</td>
-            <td>{item.sold}</td>
-            <td>{item.brand.name}</td>
-            {/* <td style={{ minWidth: '140px' }}  >{item.description.substring(0, 32) + '...'}</td> */}
-            {/* <td>{item.createdAt || ''}</td> */}
-            <td>{item.status ? 'active' : 'disable'}</td>
-            <td><Link to={`/admin/product/${item._id}`} ><i className='bx bxs-edit'></i></Link> </td>
-            <td>
-                <nav style={{ cursor: 'pointer' }}
-                    onClick={() => handleDelete(item._id)}
-                >
-                    <i className='bx bx-trash'></i>
-                </nav>
-            </td>
-        </tr>
-    )
-
     return (
         <div>
             <ToastContainer
@@ -144,7 +111,7 @@ const Products = ({ history }) => {
                                     headData={customerTableHead}
                                     renderHead={(item, index) => renderHead(item, index)}
                                     bodyData={products}
-                                    renderBody={(item, index) => renderBody(item, index)}
+                                    renderBody={(item, index) => renderBody(item, index, handleDelete)}
                                     page={page}
                                     pages={pages}
                                     handlePageChange={handlePageChange}
@@ -159,5 +126,35 @@ const Products = ({ history }) => {
         </div>
     );
 }
+
+const renderHead = (item, index) => <th key={index}>{item}</th>
+
+const renderBody = (item, index, handleDelete) => (
+    <tr key={index}>
+        <td>{index + 1}</td>
+        <td><img src={item.images[0]} alt="Hình ảnh"
+            style={{ maxWidth: '40px' }}
+        /></td>
+        <td style={{ minWidth: '110px' }}>{item.name}</td>
+        <td style={{ minWidth: '110px' }} >{(item.category && item.category.name) || ''}</td>
+        <td>{numberWithCommas(item.price)}</td>
+        {/* <td>{item.discount + '%'}</td> */}
+        <td>{item.qtyInStock}</td>
+        <td>{item.sold}</td>
+        <td>{item.brand.name}</td>
+        {/* <td style={{ minWidth: '140px' }}  >{item.description.substring(0, 32) + '...'}</td> */}
+        {/* <td>{item.createdAt || ''}</td> */}
+        <td>{item.status ? 'active' : 'disable'}</td>
+        <td><Link to={`/admin/product/${item._id}`} ><i className='bx bxs-edit'></i></Link> </td>
+        <td>
+            <nav style={{ cursor: 'pointer' }}
+                onClick={() => handleDelete(item._id)}
+            >
+                <i className='bx bx-trash'></i>
+            </nav>
+        </td>
+    </tr>
+)
+
 
 export default Products

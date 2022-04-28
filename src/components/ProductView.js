@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import { useDispatch } from 'react-redux'
@@ -14,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const ProductView = props => {
 
     const dispatch = useDispatch()
-
+    const navigate = useNavigate()
     let product = props.product
 
     if (product === undefined) {
@@ -68,7 +69,7 @@ const ProductView = props => {
         } else if (quantity > product.qtyInStock) {
             toast.info('Trong kho không còn đủ hàng')
         } else
-            props.history.push(`/cart/${product._id}?qty=${quantity}`)
+            navigate(`/cart?p=${product._id}&qty=${quantity}`)
     }
 
     return (

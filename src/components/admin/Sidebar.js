@@ -1,12 +1,13 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useRef } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
-import logo from '../../images/logo__txt.PNG'
-
+import logo from '../../images/Capture.PNG'
 import sidebar from '../../fakedata/sidebar'
 
 const SidebarItem = props => {
     const active = props.active ? 'active' : ''
+    console.log(props)
 
     return (
         <div className="sidebar__item">
@@ -18,14 +19,20 @@ const SidebarItem = props => {
     )
 }
 
-const Sidebar = (props) => {
+const Sidebar = () => {
 
-    const activeItem = sidebar.findIndex((item => item.route === props.location.pathname))
+    const navigate = useNavigate();
+    const activeItem = useLocation().pathname;
+
+    console.log(activeItem)
 
     return (
-        <div className="sidebar">
+        <div className="sidebar active" >
+            {/* <div className='sidebar-icon'>
+                <i class='bx bx-menu'></i>
+            </div> */}
             <div className="sidebar__logo">
-                <img onClick={() => props.history.push('/')}
+                <img onClick={() => navigate('/')}
                     src={logo} className="company logo" alt="logo" />
             </div>
             {
@@ -34,7 +41,7 @@ const Sidebar = (props) => {
                         <SidebarItem
                             title={item.display_name}
                             icon={item.icon}
-                            active={index === activeItem}
+                            active={item.route === activeItem}
                         />
 
                     </Link>

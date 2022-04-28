@@ -1,19 +1,12 @@
-import Axios from "axios";
-//import { toast } from 'react-toastify';
-
-import * as S from '../constants/statistic.constants'
+import * as S from '../constants/statistic.constants';
+import statisticApi from "../../api/statisticApi";
 
 export const statisticAllAction = () => async (dispatch, getState) => {
   dispatch({
     type: S.ORDER_SUMMARY_TOTAL_REQUEST
   })
-  const {
-    userSignin: { userInfo },
-  } = getState();
   try {
-    const { data } = await Axios.get('/v1/statistic/all', {
-      headers: { Authorization: `Bearer ${userInfo.token}` }
-    });
+    const data = await statisticApi.statisticAll();
     dispatch({
       type: S.ORDER_SUMMARY_TOTAL_SUCCESS,
       payload: data
@@ -30,13 +23,8 @@ export const topCustomersAction = () => async (dispatch, getState) => {
   dispatch({
     type: S.TOP_CUSTOMER_REQUEST
   })
-  const {
-    userSignin: { userInfo },
-  } = getState();
   try {
-    const { data } = await Axios.get('/v1/statistic/topCustomer', {
-      headers: { Authorization: `Bearer ${userInfo.token}` },
-    })
+    const data = await statisticApi.topCustomers();
     dispatch({
       type: S.TOP_CUSTOMER_SUCCESS,
       payload: data
@@ -57,18 +45,8 @@ export const sumarryOrders = (by) => async (dispatch, getState) => {
   dispatch({
     type: S.ORDER_SUMMARY_REQUEST
   })
-
-  const {
-    userSignin: { userInfo },
-  } = getState();
-
   try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    }
-    const { data } = await Axios.get(`/v1/statistic/revenue/${by}`, config)
+    const data = await statisticApi.summaryOrder();
     dispatch({
       type: S.ORDER_SUMMARY_SUCCESS,
       payload: data

@@ -1,4 +1,3 @@
-import Axios from "axios";
 import { toast } from 'react-toastify';
 import slideApi from "../../api/slideApi";
 
@@ -34,14 +33,8 @@ export const listSlidesAdmin = () => async (dispatch, getState) => {
     type: SLIDE_LIST_REQUEST
   })
 
-  const {
-    userSignin: { userInfo }
-  } = getState();
-
   try {
-    const { data } = await Axios.get('/v1/slide/admin', {
-      headers: { Authorization: `Bearer ${userInfo.token}` }
-    })
+    const data = await slideApi.getListSlidesPrivate();
     dispatch({
       type: SLIDE_LIST_SUCCESS,
       payload: data
@@ -54,19 +47,12 @@ export const listSlidesAdmin = () => async (dispatch, getState) => {
   }
 };
 
-
 export const addSlideAction = (slide) => async (dispatch, getState) => {
   dispatch({ type: SLIDE_CREATE_REQUEST })
   toast.update('Đang cập nhật')
 
-  const {
-    userSignin: { userInfo }
-  } = getState();
-
   try {
-    const { data } = await Axios.post('/v1/slide', slide, {
-      headers: { Authorization: `Bearer ${userInfo.token}` }
-    });
+    const data = await slideApi.addSlide(slide);
 
     dispatch({ type: SLIDE_CREATE_SUCCESS, payload: data })
     toast.success('Thêm thành công')
@@ -80,15 +66,8 @@ export const addSlideAction = (slide) => async (dispatch, getState) => {
 export const updateSlideAction = (slide) => async (dispatch, getState) => {
   dispatch({ type: SLIDE_UPDATE_REQUEST, payload: slide })
   toast.update('Đang cập nhật')
-  const {
-    userSignin: { userInfo }
-  } = getState()
   try {
-    const { data } = await Axios.put(`/v1/slide/${slide._id}`, slide, {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`
-      }
-    })
+    const data = await slideApi.updateSlide(slide);
     dispatch({ type: SLIDE_UPDATE_SUCCESS, payload: data })
     toast.success('Cập nhật thành công')
   } catch (error) {
@@ -104,12 +83,9 @@ export const updateSlideAction = (slide) => async (dispatch, getState) => {
 
 export const deleteSlideAction = (id) => async (dispatch, getState) => {
   dispatch({ type: SLIDE_DELETE_REQUEST })
-  const { userSignin: { userInfo } } = getState();
 
   try {
-    const { data } = await Axios.delete(`/v1/slide/${id}`, {
-      headers: { Authorization: `Bearer ${userInfo.token}` }
-    })
+    const data = await slideApi.deleteSlide(id);
     dispatch({ type: SLIDE_DELETE_SUCCESS, payload: data })
     dispatch(listSlides())
     toast.success('Xóa thành công')
@@ -126,15 +102,8 @@ export const deleteSlideAction = (id) => async (dispatch, getState) => {
 
 export const detailSlideAction = (id) => async (dispatch, getState) => {
   dispatch({ type: SLIDE_DETAILS_REQUEST })
-  const {
-    userSignin: { userInfo }
-  } = getState()
   try {
-    const { data } = await Axios.get(`/v1/slide/${id}`, {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`
-      }
-    })
+    const data = await slideApi.getSlide(id);
     dispatch({ type: SLIDE_DETAILS_SUCCESS, payload: data })
   } catch (error) {
     const message =

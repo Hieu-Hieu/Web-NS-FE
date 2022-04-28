@@ -1,28 +1,27 @@
 import React, { useEffect } from 'react'
-
 import { useSelector, useDispatch } from 'react-redux'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 import Helmet from '../components/Helmet'
 import Button from '../components/Button'
-
 import numberWithCommas from '../utils/numberWithCommas'
-
 import { addToCart, removeFromCart } from '../redux/actions/cartActions'
 
 const Cart = (props) => {
-    const params = useParams();
-    const productId = params.id;
-    const { search } = useLocation();
-    const qtyUrl = new URLSearchParams(search).get('qty')
-    const qty = qtyUrl ? Number(qtyUrl) : 1;
+    const [searchParams] = useSearchParams();
+    const [pId, qty] = searchParams.entries();
+
+    const productId = pId && pId[1];
+    const quantity = qty && Number(qty[1])
+
     const cart = useSelector((state) => state.cart);
     const { cartItems, error } = cart;
     const userSignin = useSelector(state => state.userSignin);
     const { userInfo } = userSignin;
 
-    let itemCount = (cartItems && cartItems.length) || 0;
+    const navigate = useNavigate()
 
+    let itemCount = (cartItems && cartItems.length) || 0;
 
     const caculateMoney = () => {
         let money = 0;
@@ -36,31 +35,30 @@ const Cart = (props) => {
 
     useEffect(() => {
         if (productId) {
-            dispatch(addToCart(productId, qty));
+            dispatch(addToCart(productId, quantity));
         }
-    }, [dispatch, productId, qty]);
+    }, [dispatch, productId, quantity]);
 
     const removeFromCartHandler = (id) => {
         // delete action
         dispatch(removeFromCart(id));
     };
 
-    const updateQuantity = (opt, productId, qty) => {
+    const updateQuantity = (opt, productId, quantity) => {
         if (opt === '+') {
-            dispatch(addToCart(productId, qty + 1))
+            dispatch(addToCart(productId, quantity + 1))
         }
         else if (opt === '-') {
-            dispatch(addToCart(productId, qty - 1 === 0 ? 1 : qty - 1))
+            dispatch(addToCart(productId, quantity - 1 === 0 ? 1 : quantity - 1))
         }
     }
     const checkoutHandler = () => {
         if (userInfo != null) {
-            props.history.push('/order');
+            navigate('/order')
         }
         else {
-            props.history.push('/login?redirect=order');
+            navigate('/login?redirect=order')
         }
-
     }
 
     return (
@@ -92,10 +90,9 @@ const Cart = (props) => {
                 <div className="cart__list">
                     {
                         error ? <div>{error}</div> :
-                            cartItems && cartItems.length === 0 ? <div>Không có sản phẩm nào trong giỏ</div> :
-                                cartItems.map((item, index) => (
-
-                                    <div className="cart__item" >
+                            cartItems && cartItems.length === 0 ? <div>Bạn không có sản phẩm nào trong giỏ</div> :
+                                cartItems.map((item) => (
+                                    <div className="cart__item" key={item._id} >
                                         <div className="cart__item__image">
                                             <img src={item.image[0]} alt="" />
                                         </div>

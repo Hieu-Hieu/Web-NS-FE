@@ -1,4 +1,3 @@
-import Axios from 'axios';
 import { toast } from 'react-toastify';
 import { CART_RESET } from '../constants/cartConstants';
 import {
@@ -22,21 +21,14 @@ import {
   ORDER_PAY_FAIL,
 
 } from '../constants/orderConstants';
+import orderApi from '../../api/orderApi';
 
 // danh sach don  hang da dat cua 1 user
-export const myOrders = () => async (dispatch, getState) => {
+export const myOrders = () => async (dispatch) => {
   dispatch({ type: ORDER_MINE_LIST_REQUEST });
-  const {
-    userSignin: { userInfo },
-  } = getState();
-  const config = {
-    headers: {
-      Authorization: `Bearer ${userInfo.token}`,
-    }
-  }
-  const id = userInfo._id;
+
   try {
-    const { data } = await Axios.get('/v1/order/myOrder/' + id, config);
+    const data = await orderApi.myOrders();
     dispatch({ type: ORDER_MINE_LIST_SUCCESS, payload: data });
   } catch (error) {
     const message =
@@ -47,33 +39,17 @@ export const myOrders = () => async (dispatch, getState) => {
   }
 };
 
-const createOrder = (order) => async (dispatch, getState) => {
+export const createOrder = (order) => async (dispatch, getState) => {
   console.log('lan 1')
   try {
     dispatch({ type: ORDER_CREATE_REQUEST });
-
-    const {
-      userSignin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      }
-    }
-
-    const { data } = await Axios.post('/v1/order',
-      order, config
-    );
-
-
+    const data = await orderApi.createOrder(order)
     if (data) {
-      // Axios.post('/v1/order/sendmail', { userInfo, cartItems: order.orderItems })
       dispatch({
         type: ORDER_CREATE_SUCCESS,
         payload: data
       });
-
-      await localStorage.setItem("cartItems", '');
+      localStorage.setItem("cartItems", '');
       dispatch({ type: CART_RESET })
       console.log(data)
       if (data.paymentMethod === 'COD') {
@@ -90,15 +66,10 @@ const createOrder = (order) => async (dispatch, getState) => {
 
 export const orderDetail = (orderID) => async (dispatch, getState) => {
   dispatch({ type: ORDER_DETAILS_REQUEST });
-  const { userSignin: { userInfo } } = getState();
-  const config = {
-    headers: {
-      Authorization: `Bearer ${userInfo.token}`,
-    }
-  }
+
   try {
-    const { data } = await Axios.get('/v1/order/' + orderID, config);
-    console.log(data)
+    const data = await orderApi.getOrderDetail(orderID)
+
     dispatch({ type: ORDER_DETAILS_SUCCESS, payload: data });
   } catch (error) {
     const message =
@@ -114,21 +85,16 @@ export const orderListAction = ({ pageNumber = 1, keyword = '' }) => async (disp
 
   dispatch({ type: ORDER_LIST_REQUEST });
   const { userSignin: { userInfo } } = getState();
-  const config = {
-    headers: {
-      Authorization: `Bearer ${userInfo.token}`,
-    }
-  }
+
   try {
+    let data = [];
     if (userInfo.role === 'user') {
-      const { data } = await Axios.get('/v1/order', config);
-      dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
-    } else {
-      const { data } = await Axios.get(`/v1/order/admin?pageNumber=${pageNumber}&keyword=${keyword}`, config);
-      dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
-      //console.log(data)
+      data = await orderApi.getOrders('user')
     }
-  } catch (error) {
+    data = await orderApi.getOrders('admin', pageNumber, keyword)
+    dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
+  }
+  catch (error) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
@@ -137,33 +103,26 @@ export const orderListAction = ({ pageNumber = 1, keyword = '' }) => async (disp
   }
 };
 
-export const orderDelivery = () => async (dispatch, getState) => {
-  dispatch({ type: ORDER_LIST_REQUEST });
-  // const { userSignin: { userInfo } } = getState();
-  try {
-    const { data } = await Axios.get('/api/orders/shipper/DangGiao');
-    console.log("data:" + data);
-    dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    dispatch({ type: ORDER_LIST_FAIL, payload: message });
-  }
-};
+// export const orderDelivery = () => async (dispatch, getState) => {
+//   dispatch({ type: ORDER_LIST_REQUEST });
+
+//   try {
+//     const  data  = await Axios.get('/api/orders/shipper/DangGiao');
+//     dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
+//   } catch (error) {
+//     const message =
+//       error.response && error.response.data.message
+//         ? error.response.data.message
+//         : error.message;
+//     dispatch({ type: ORDER_LIST_FAIL, payload: message });
+//   }
+// };
 
 export const updateStatusOrderAction = ({ id, status, pageNumber }) => async (dispatch, getState) => {
   try {
     dispatch({ type: ORDER_UPDATE_REQUEST });
-    const { userSignin: { userInfo } } = getState();
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      }
-    }
 
-    const { data } = await Axios.put('/v1/order/' + id, { status }, config);
+    const data = await orderApi.updateOrderStatus(id, status);
     if (data) {
       dispatch({
         type: ORDER_UPDATE_SUCCESS,
@@ -191,14 +150,8 @@ export const updateStatusOrderAction = ({ id, status, pageNumber }) => async (di
 export const userUpdateOrderAction = ({ id, status }) => async (dispatch, getState) => {
   try {
     dispatch({ type: ORDER_UPDATE_REQUEST });
-    const { userSignin: { userInfo } } = getState();
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      }
-    }
 
-    const { data } = await Axios.put('/v1/order/myOrder/' + id, { status }, config);
+    const data = await orderApi.userUpdateOrderStatus(id, status);
     if (data) {
       dispatch({
         type: ORDER_UPDATE_SUCCESS,
@@ -221,16 +174,11 @@ export const userUpdateOrderAction = ({ id, status }) => async (dispatch, getSta
 
 export const payOrder = (order, paymentResult) => async (
   dispatch,
-  getState
 ) => {
   dispatch({ type: ORDER_PAY_REQUEST, payload: { order, paymentResult } });
-  const {
-    userSignin: { userInfo },
-  } = getState();
+
   try {
-    const { data } = Axios.put(`/v1/order/online-pay/${order._id}`, paymentResult, {
-      headers: { Authorization: `Bearer ${userInfo.token}` },
-    });
+    const data = await orderApi.payOrder(order._id, paymentResult)
     dispatch({ type: ORDER_PAY_SUCCESS, payload: data });
     dispatch(orderDetail(order._id));
     toast.success('Thanh toán thành công, Cảm ơn quý khách đã mua hàng!')
@@ -243,5 +191,3 @@ export const payOrder = (order, paymentResult) => async (
     dispatch({ type: ORDER_PAY_FAIL, payload: message });
   }
 };
-
-export { createOrder };

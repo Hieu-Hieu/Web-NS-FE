@@ -105,7 +105,7 @@ const UserProfile = () => {
       />
       <h2 className="page-header">Tài khoản của tôi</h2>
       <div className="row">
-        <div className="col-4">
+        <div className="col-4 col-md-12 col-sm-12">
           <div className="card full-height">
             {
               loading ? <div>Loading...</div> : error ? <div>{error}</div>
@@ -146,7 +146,7 @@ const UserProfile = () => {
             }
           </div>
         </div>
-        <div className="col-8">
+        <div className="col-8 col-md-12 col-sm-12">
           <div className="card full-height">
             <form action="" className="userUpdateForm" onSubmit={handleSubmit}>
               <div className="userUpdateLeft">

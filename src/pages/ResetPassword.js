@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import Helmet from '../components/Helmet'
-import { } from '../styles/login.css'
 import { resetPassword } from '../redux/actions/userAction'
 
-const ResetPassword = (props) => {
+const ResetPassword = () => {
   const [token, setToken] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
   const [matchedPassword, setMatchedPassword] = useState(true);
+
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -34,14 +35,14 @@ const ResetPassword = (props) => {
   useEffect(() => {
     if (success) {
       alert('Đổi mật khẩu thành công. Đăng nhập để mua sắm nào!');
-      props.history.push('/login');
+      navigate('/login');
     }
-  }, [success, props.history]);
+  }, [success]);
 
   return (
     <Helmet title="Đặt lại mật khẩu">
       <div className="login">
-        <form onSubmit={submitHandler} >
+        <form onSubmit={submitHandler} autoComplete="off">
           <h3>Đặt lại mật khẩu</h3>
           {loading && <div>Loading...</div>}
           {error && <div>{error}</div>}

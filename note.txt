@@ -1,0 +1,6 @@
+Cần Fix:
+- Phân trang
+- reponsive login, register page
+- Clean code
+- local storage: ko nên lưu info user trong localStorage
+

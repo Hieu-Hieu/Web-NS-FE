@@ -4,18 +4,22 @@
   display: flex;
   justify-content: space-between;
   padding-top: 30px;
+  height: 100%;
+  @include mobile {
+    flex-direction: column;
+  }
 }
 
 .order__info-shipping {
   width: 60%;
+  @include mobile {
+    width: 100%;
+  }
 }
 
 .order__info-title {
   font-size: 20px;
   text-transform: uppercase;
-}
-
-.order__info-form {
 }
 
 .order__info-form-item {
@@ -26,11 +30,18 @@
 .order__info-form-item.half {
   width: 48%;
   flex-wrap: wrap;
+
+  @include tablet {
+    width: 100%;
+  }
 }
 
 .order__info-item-half {
   display: flex;
   justify-content: space-between;
+  @include tablet {
+    flex-direction: column;
+  }
 }
 
 .order__info-input-label {
@@ -49,6 +60,9 @@
 
 .order__list {
   width: 36%;
+  @include mobile {
+    width: 100%;
+  }
 }
 
 .order__list-title {
@@ -62,9 +76,6 @@
   font-size: 16px;
   padding: 16px 0;
   border-bottom: solid 2px #ececec;
-}
-
-.order__list-product {
 }
 
 .order__list-product-item {
@@ -87,13 +98,6 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-
-.order__list-product-quantity {
-}
-
-.order__list-product-price {
-}
-
 .order__shipping {
   display: flex;
   justify-content: space-between;
@@ -140,7 +144,7 @@
 .order__button-checkout {
   padding: 8px 8px;
   font-size: 14px;
-  background-color: #024137;
+  background-color: $main-color;
   color: #fff;
   border-radius: 3px;
   margin-right: 16px;
@@ -148,7 +152,7 @@
 .order__button-return {
   padding: 8px 8px;
   font-size: 14px;
-  background-color: #024137;
+  background-color: $main-color;
   color: #fff;
   border-radius: 3px;
 }

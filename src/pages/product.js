@@ -26,21 +26,11 @@ const Product = () => {
         topProductsRelate: productsRelate,
     } = listProductsRelate
 
-    //console.log(listProductsRelate)
-
-    // const product = productData.getProductBySlug(props.match.params.id
-
-
     React.useEffect(() => {
         window.scrollTo(0, 0)
-
         dispatch(detailsProduct(productId))
         dispatch(topProductsRelate(productId))
     }, [dispatch, productId])
-
-    // const addToCartHandler = () => {
-    //     props.history.push(`/cart/${productId}?qty=${qty}`);
-    // };
 
     return (
 

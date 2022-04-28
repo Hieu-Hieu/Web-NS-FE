@@ -27,9 +27,9 @@ const RoutesUser = () => {
       <Route path="register" element={<Register />} />
       <Route path="my-profile" element={<UserProfile />} />
       <Route path="order" element={<Order />} />
+      <Route path="catalog" element={<Catalog />} />
       <Route path="order-history" element={<OrderHistory />} />
       <Route path="order-detail/:id" element={<OrderDetail />} />
-      <Route path="catalog" element={<Catalog />} />
       <Route path="/" element={<Home />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

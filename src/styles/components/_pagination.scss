@@ -4,8 +4,23 @@
   justify-content: center;
   &__list {
     display: flex;
-    .paginate__list-item {
+    &-item {
       margin-left: 4px;
+      height: 46px;
+      padding: 16px;
+      font-size: 1.4rem;
+      font-weight: 600;
+      border-radius: 2px;
+      display: block;
+
+      &:hover {
+        background-color: #0adb5b;
+      }
+
+      &.active {
+        background-color: #0adb5b;
+        cursor: default;
+      }
       button {
         height: 46px;
         padding: 16px;
@@ -14,28 +29,11 @@
         border-radius: 2px;
 
         &:hover {
-          background-color: #dfdfdf;
+          background-color: #0adb5b;
         }
 
         &.active {
-          background-color: #dfdfdf;
-        }
-      }
-      a {
-        height: 46px;
-        padding: 16px;
-        font-size: 1.4rem;
-        font-weight: 600;
-        border-radius: 2px;
-        display: block;
-
-        &:hover {
-          background-color: #dfdfdf;
-        }
-
-        &.active {
-          background-color: #dfdfdf;
-          cursor: default;
+          background-color: #0adb5b;
         }
       }
     }

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useLocation, Route } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { userLogOutAction } from '../redux/actions/userAction'
 import Dropdown from './admin/Dropdown'
 
@@ -20,7 +20,6 @@ const mainNav = [
 ]
 
 const Header = () => {
-
     const userSignin = useSelector(state => state.userSignin);
     const dispatch = useDispatch();
     const { userInfo } = userSignin;
@@ -72,9 +71,9 @@ const Header = () => {
 
         const isScroll = () => {
             if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
-                headerRef.current.classList.add('shrink')
+                headerRef.current?.classList.add('shrink')
             } else {
-                headerRef.current.classList.item('shrink') && headerRef.current.classList.remove('shrink')
+                headerRef.current?.classList.item('shrink') && headerRef.current.classList.remove('shrink')
             }
         }
 
@@ -94,37 +93,22 @@ const Header = () => {
         dispatch(userLogOutAction());
     }
 
-    const renderUserToggle = (user) => (
-        <div className="topnav__right-user">
-            <div className="topnav__right-user__image">
-                <img src={user.avatar} alt="" />
-            </div>
-            <div className="topnav__right-user__name">
-                {user.firstName}
-            </div>
-        </div>
-    )
+    const searchMobileRef = useRef(null)
+    const handleFucusSearch = () => {
+        searchMobileRef.current.classList.toggle('active');
 
-    const renderUserMenu = (item, index) => (
-        <Link to={item.go} key={index}
-            onClick={item.go === "" && (() => signoutHandler())}
-        >
-            <div className="notification-item">
-                <i className={item.icon}></i>
-                <span>{item.content}</span>
-            </div>
-        </Link>
-    )
+    }
+    const hanldeOnblur = () => {
 
+        // searchMobileRef.current.classList.remove('active');
+        // setShowSearch(false)
+
+    }
 
     return (
         <div className="header" ref={headerRef}>
-            <div className="container">
-                <div className="header__logo" style={{ height: '100%' }}>
-                    <Link to="/">
-                        <img src={logo} alt="#" style={{ width: '60px', borderRadius: '50%' }} />
-                    </Link>
-                </div>
+            <div className="container header__inner">
+
                 <div className="header__menu">
                     <div className="header__menu__mobile-toggle" onClick={menuToggle}>
                         <i className='bx bx-menu-alt-left'></i>
@@ -147,12 +131,17 @@ const Header = () => {
                             ))
                         }
                     </div>
+                    <div className="header__logo" style={{ height: '100%' }}>
+                        <Link to="/">
+                            <img src={logo} alt="#" style={{ width: '60px', borderRadius: '50%' }} />
+                        </Link>
+                    </div>
                     <div className="header__menu__right">
                         <div className="header__menu__item header__menu__right__item">
-                            {/* <i className="bx bx-search"></i> */}
-
-                            {/* <Route render={({ history }) => <Search history={history} />}></Route> */}
-                            <Search />
+                            <i className="bx bx-search search-icon-mobile"
+                                onClick={handleFucusSearch}
+                            ></i>
+                            <Search ref={searchMobileRef} hanldeOnblur={hanldeOnblur} />
                         </div>
 
                         <div className="header__menu__item header__menu__right__item">
@@ -168,25 +157,19 @@ const Header = () => {
                         </div>
                         <div className="header__menu__item header__menu__right__item">
                             {!userInfo ?
-                                <div style={{ fontSize: '14px' }}>
+                                <div className='user-login-icon'>
+                                    <Link to="/login" className='user-icon'>
+                                        <i class='bx bx-user'></i>
+                                    </Link>
                                     <Link to="/login">Đăng nhập</Link>
                                     <Link to="/register">| Đăng ký</Link>
                                 </div>
                                 : <div className="user-wrap">
-                                    {/* <i className="bx bx-user"></i> */}
-                                    {/* <div className="dropdown">
-                                        <ul>
-                                            <li><Link to=""><span>Tài khoản của tôi</span></Link></li>
-                                            <li><Link to="">Đơn mua</Link></li>
-                                            <li><Link to="#signout" onClick={signoutHandler}
-                                            >Đăng xuất
-                                            </Link></li>
-                                        </ul>
-                                    </div> */}
+
                                     <Dropdown
                                         customToggle={() => renderUserToggle(userInfo)}
                                         contentData={user_menu}
-                                        renderItems={(item, index) => renderUserMenu(item, index)}
+                                        renderItems={(item, index) => renderUserMenu(item, index, signoutHandler)}
                                     // logOut ={signoutHandler}
                                     />
                                 </div>
@@ -198,5 +181,27 @@ const Header = () => {
         </div>
     )
 }
+
+const renderUserToggle = (user) => (
+    <div className="topnav__right-user">
+        <div className="topnav__right-user__image">
+            <img src={user.avatar} alt="" />
+        </div>
+        <div className="topnav__right-user__name">
+            {user.firstName}
+        </div>
+    </div>
+)
+
+const renderUserMenu = (item, index, signoutHandler) => (
+    <Link to={item.go} key={index}
+        onClick={item.go === "" && (() => signoutHandler())}
+    >
+        <div className="notification-item">
+            <i className={item.icon}></i>
+            <span>{item.content}</span>
+        </div>
+    </Link>
+)
 
 export default Header

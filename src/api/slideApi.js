@@ -5,17 +5,21 @@ const slideApi = {
         const url = "/slide";
         return axiosClient.get(url, { params });
     },
+    getSlide: (id) => {
+        const url = `/slide/${id}`;
+        return axiosClient.get(url);
+    },
     getListSlidesPrivate: () => {
         const url = '/slide/admin';
         return axiosClient.get(url);
     },
-    addSlide: () => {
+    addSlide: (slide) => {
         const url = "/slide"
-        return axiosClient.post(url);
+        return axiosClient.post(url, slide);
     },
-    updateSlide: (id) => {
-        const url = `/slide/${id}`;
-        return axiosClient.put(url);
+    updateSlide: (slide) => {
+        const url = `/slide/${slide._id}`;
+        return axiosClient.put(url, slide);
     },
     deleteSlide: (id) => {
         const url = `/slide/${id}`

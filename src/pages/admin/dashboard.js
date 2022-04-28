@@ -76,6 +76,7 @@ const renderCusomerBody = (item, index) => (
 // )
 
 const Dashboard = ({ history }) => {
+    // alert("admin")
 
     const state = useSelector(state => state.statisticAll)
     const { loading, error, summary } = state;

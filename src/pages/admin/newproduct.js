@@ -8,8 +8,6 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { Link } from "react-router-dom";
-import Button from "../../components/Button";
 
 const NewProduct = ({ history }) => {
   const myInfo = useSelector((state) => state.userSignin);
@@ -162,8 +160,8 @@ const NewProduct = ({ history }) => {
                     {loadingBrands
                       ? ""
                       : errorBrands
-                      ? ""
-                      : brands &&
+                        ? ""
+                        : brands &&
                         brands.map((item, index) => (
                           <option key={index} value={item._id}>
                             {item.name}
