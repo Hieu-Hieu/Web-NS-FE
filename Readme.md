@@ -8,6 +8,7 @@
 
 - Link trang web: https://hfood.netlify.app
 - Tài khoản để test: user ( test@gmail.com, matkhau: Test123@@@ || hoặc có thể đăng nhập nhanh bằng tk google), TK admin ( admin@gmail.com, matkhau: Admin123@@@)
+- Tài khoản thanh toán paypal khi mua hàng (email: Hieu123.test@gmail.com, pass: Testpayment@@)
 
 ## Use-case diagram:
 
