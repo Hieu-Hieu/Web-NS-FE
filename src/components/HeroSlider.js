@@ -1,94 +1,93 @@
-import React, { useEffect, useState, useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState, useCallback } from "react";
+import { Link } from "react-router-dom";
+import { t } from "i18next";
 
-import Button from './Button'
+import Button from "./Button";
 
-const HeroSlider = props => {
+const HeroSlider = (props) => {
+  const data = props.data;
 
-    const data = props.data
+  const timeOut = props.timeOut ? props.timeOut : 3000;
 
-    const timeOut = props.timeOut ? props.timeOut : 3000
+  const [activeSlide, setActiveSlide] = useState(0);
 
-    const [activeSlide, setActiveSlide] = useState(0);
+  const nextSlide = useCallback(() => {
+    const index = activeSlide + 1 === data.length ? 0 : activeSlide + 1;
+    setActiveSlide(index);
+  }, [activeSlide, data]);
 
-    const nextSlide = useCallback(
-        () => {
-            const index = activeSlide + 1 === data.length ? 0 : activeSlide + 1
-            setActiveSlide(index)
-        },
-        [activeSlide, data],
-    )
+  const prevSlide = () => {
+    const index = activeSlide - 1 < 0 ? data.length - 1 : activeSlide - 1;
+    setActiveSlide(index);
+  };
 
-    const prevSlide = () => {
-        const index = activeSlide - 1 < 0 ? data.length - 1 : activeSlide - 1
-        setActiveSlide(index)
+  useEffect(() => {
+    if (props.auto) {
+      const slideAuto = setInterval(() => {
+        nextSlide();
+      }, timeOut);
+      return () => {
+        clearInterval(slideAuto);
+      };
     }
+  }, [nextSlide, timeOut, props]);
 
-    useEffect(() => {
-        if (props.auto) {
-            const slideAuto = setInterval(() => {
-                nextSlide()
-            }, timeOut);
-            return () => {
-                clearInterval(slideAuto)
-            }
-        }
-    }, [nextSlide, timeOut, props])
-
-    return (
-        <div className="hero-slider">
-            {
-                data.map((item, index) => (
-                    <HeroSliderItem key={index} item={item} active={index === activeSlide} />
-                ))
-            }
-            {
-                props.control ? (
-                    <div className="hero-slider__control">
-                        <div className="hero-slider__control__item" onClick={prevSlide}>
-                            <i className="bx bx-chevron-left"></i>
-                        </div>
-                        <div className="hero-slider__control__item">
-                            <div className="index">
-                                {activeSlide + 1}/{data.length}
-                            </div>
-                        </div>
-                        <div className="hero-slider__control__item" onClick={nextSlide}>
-                            <i className="bx bx-chevron-right"></i>
-                        </div>
-                    </div>
-                ) : null
-            }
-        </div>
-    )
-}
-
-const HeroSliderItem = props => (
-    <div className={`hero-slider__item ${props.active ? 'active' : ''}`}>
-        <div className="hero-slider__item__info">
-            <div className={`hero-slider__item__info__title color-${props.item.color}`}>
-                <span>{props.item.name}</span>
+  return (
+    <div className="hero-slider">
+      {data.map((item, index) => (
+        <HeroSliderItem
+          key={index}
+          item={item}
+          active={index === activeSlide}
+        />
+      ))}
+      {props.control ? (
+        <div className="hero-slider__control">
+          <div className="hero-slider__control__item" onClick={prevSlide}>
+            <i className="bx bx-chevron-left"></i>
+          </div>
+          <div className="hero-slider__control__item">
+            <div className="index">
+              {activeSlide + 1}/{data.length}
             </div>
-            <div className="hero-slider__item__info__description">
-                <span>{props.item.description}</span>
-            </div>
-            <div className="hero-slider__item__info__btn">
-                <Link to={props.item.path}>
-                    <Button
-                        backgroundColor={props.item.color}
-                        icon="bx bx-cart"
-                        animate={true}
-                    >
-                        xem chi tiết
-                    </Button>
-                </Link>
-            </div>
+          </div>
+          <div className="hero-slider__control__item" onClick={nextSlide}>
+            <i className="bx bx-chevron-right"></i>
+          </div>
         </div>
-        <div className="hero-slider__item__image">
-            <div className={`shape bg-${props.item.color}`}></div>
-            <img src={props.item.image} alt="images" />
-        </div>
+      ) : null}
     </div>
-)
+  );
+};
 
-export default HeroSlider
+const HeroSliderItem = (props) => (
+  <div className={`hero-slider__item ${props.active ? "active" : ""}`}>
+    <div className="hero-slider__item__info">
+      <div
+        className={`hero-slider__item__info__title color-${props.item.color}`}
+      >
+        <span>{props.item.name}</span>
+      </div>
+      <div className="hero-slider__item__info__description">
+        <span>{props.item.description}</span>
+      </div>
+      <div className="hero-slider__item__info__btn">
+        <Link to={props.item.path}>
+          <Button
+            backgroundColor={props.item.color}
+            icon="bx bx-cart"
+            animate={true}
+          >
+            {t("view_detail")}
+          </Button>
+        </Link>
+      </div>
+    </div>
+    <div className="hero-slider__item__image">
+      <div className={`shape bg-${props.item.color}`}></div>
+      <img src={props.item.image} alt="images" />
+    </div>
+  </div>
+);
+
+export default HeroSlider;

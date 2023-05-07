@@ -15,9 +15,9 @@ import { ORDER_PAY_RESET } from "../redux/constants/orderConstants";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useParams } from "react-router-dom";
+import axiosClient from "../api/axiosClient";
 
 const OrderDetail = () => {
-
   const params = useParams();
   const orderId = params.id;
 
@@ -33,13 +33,14 @@ const OrderDetail = () => {
   const dispatch = useDispatch();
 
   let link = "/order-history";
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     if (!userInfo) {
       navigate("/login");
     } else {
       const addPayPalScript = async () => {
-        const { data } = await axios.get("/v1/config/paypal");
+        const data = await axiosClient.get("/config/paypal");
+
         const script = document.createElement("script");
         script.type = "text/javascript";
         script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
@@ -286,7 +287,7 @@ const OrderDetail = () => {
                 <button
                   className="order__button-checkout"
                   onClick={() => {
-                    navigate(link)
+                    navigate(link);
                   }}
                 >
                   Đơn hàng đã mua
