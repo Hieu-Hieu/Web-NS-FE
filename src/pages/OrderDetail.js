@@ -40,7 +40,7 @@ const OrderDetail = () => {
     } else {
       const addPayPalScript = async () => {
         const data = await axiosClient.get("/config/paypal");
-
+        console.log(data);
         const script = document.createElement("script");
         script.type = "text/javascript";
         script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
@@ -51,13 +51,15 @@ const OrderDetail = () => {
         document.body.appendChild(script);
       };
 
+      console.log(order);
+
       if (
         !order ||
-        (order && (order.orderItems.length === 0 || order._id !== orderId))
+        (order && (order?.orderItems?.length === 0 || order._id !== orderId))
       ) {
         // alert('233')
         dispatch({ type: ORDER_PAY_RESET });
-        dispatch(orderDetail(orderId));
+        // dispatch(orderDetail(orderId));
       } else if (order && !order.isPaid) {
         if (!window.paypal) {
           addPayPalScript();
@@ -74,6 +76,12 @@ const OrderDetail = () => {
     //   }
     // }
   }, [dispatch, userInfo, orderId, sdkReady, order]);
+
+  useEffect(() => {
+    if (orderId) {
+      dispatch(orderDetail(orderId));
+    }
+  }, [orderId]);
 
   const successPaymentHnadler = (paymentResult) => {
     console.log(paymentResult);
