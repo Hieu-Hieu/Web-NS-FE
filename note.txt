@@ -4,3 +4,20 @@ Cần Fix:
 - Clean code
 - local storage: ko nên lưu info user trong localStorage
 
+-------------
+note: 10/5/2023
++ test lại toàn bộ chức năng, cái nào chưa chạy thì fix nè
++ fix deploy lỗi trang giao hàng, 
++ fix lấy thông tin đơn hang GHN
++ fix trang admin, search sửa
++ fix UI chat
++ fix search bằng giọng nói
++ Fix cái tính tiền hàng hóa
++ 
+========
+Lý thuyết: 
++ vẽ lại use case
++ Bỏ erd cũng đc. giải thích kỹ bảng dữ liệu
++ Giải thích kỹ các bước làm phần cài đặt
++ giải tích về mô hình chat GPT
+

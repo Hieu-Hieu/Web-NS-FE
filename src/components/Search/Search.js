@@ -17,8 +17,6 @@ export const Search = forwardRef((props, searchMobileRef) => {
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition({ clearTranscriptOnListen: true });
 
-  console.log(transcript);
-
   const handleListening = () => {
     if (listening) {
       SpeechRecognition.stopListening();
