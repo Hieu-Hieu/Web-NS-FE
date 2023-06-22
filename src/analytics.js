@@ -2,10 +2,12 @@ import ReactGA from "react-ga4";
 
 function init() {
   // Enable debug mode on the local development environment
-  if (process.env.ANALYTICS_TRACKING_ID) {
+  if (process.env.REACT_APP_ANALYTICS_TRACKING_ID) {
     const isDev =
       !process.env.NODE_ENV || process.env.NODE_ENV === "development";
-    ReactGA.initialize(process.env.ANALYTICS_TRACKING_ID, { debug: isDev });
+    ReactGA.initialize(process.env.REACT_APP_ANALYTICS_TRACKING_ID, {
+      debug: isDev,
+    });
   }
 }
 
