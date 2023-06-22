@@ -34,12 +34,16 @@ const Order = (props) => {
   const [ward, setWard] = useState("");
   const [to_ward_code, set_To_ward_code] = useState("");
   const [to_district_id, set_To_district_id] = useState("");
-
-  console.log({ ward, district });
+  const [shippingFee, setShippringFee] = useState(30000);
 
   let total = cartItems.reduce((a, c) => a + c.price * c.quantity, 0) + 30000;
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (wards) {
+    }
+  }, [wards]);
 
   useEffect(() => {
     if (userInfo) {
@@ -110,8 +114,9 @@ const Order = (props) => {
     );
     setWards(data);
   };
-  const onChangeProvince = (e) => {
-    const name = e.target.value;
+  const onChangeProvince = (value, data) => {
+    const name = value;
+    set_To_ward_code(data?.key);
     setProvince(name);
     const province = provinces.find((item) => item.ProvinceName === name);
     getDistrict(province.ProvinceID);
@@ -227,8 +232,7 @@ const Order = (props) => {
                 <label className="order__info-input-label">
                   Tỉnh, thành phố
                 </label>
-                <select onChange={onChangeProvince} required>
-                  {/* {console.log(provinces)} */}
+                {/* <select onChange={onChangeProvince} required>
                   <option value="">Chọn Tỉnh, Thành phố</option>
                   {provinces &&
                     provinces.map((item) => (
@@ -236,7 +240,22 @@ const Order = (props) => {
                         {item.ProvinceName}
                       </option>
                     ))}
-                </select>
+                </select> */}
+                <Select
+                  placeholder="Chọn Tỉnh, Thành phố"
+                  onChange={(value, data) => {
+                    onChangeProvince(value, data);
+                  }}
+                >
+                  {provinces.map((item) => (
+                    <Select.Option
+                      value={item.ProvinceName}
+                      key={item.ProvinceID}
+                    >
+                      {item.ProvinceName}
+                    </Select.Option>
+                  ))}
+                </Select>
               </div>
               <div className="order__info-form-item half">
                 <label className="order__info-input-label">Quận, huyện</label>
@@ -337,7 +356,7 @@ const Order = (props) => {
           <div className="order__shipping">
             <div className="order__shipping-title">Phí vận chuyển</div>
             <div className="order__shipping-fee">
-              {numberWithCommas(30000)}đ
+              {numberWithCommas(shippingFee)}đ
             </div>
           </div>
           <div className="order__price">

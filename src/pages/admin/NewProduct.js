@@ -27,6 +27,7 @@ const NewProduct = ({ history }) => {
   const [qtyInStock, setQtyInStock] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [certification, setCertification] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -105,7 +106,16 @@ const NewProduct = ({ history }) => {
                     required
                   />
                 </div>
-
+                <div className="userUpdateItem">
+                  <label>Từ khóa tìm kiếm:(*)</label>
+                  <input
+                    type="text"
+                    placeholder="VD: Cà phê rang xay..."
+                    className="userUpdateInput"
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
                 <div className="userUpdateItem">
                   <label>Giá:(*)</label>
                   <input
@@ -160,8 +170,8 @@ const NewProduct = ({ history }) => {
                     {loadingBrands
                       ? ""
                       : errorBrands
-                        ? ""
-                        : brands &&
+                      ? ""
+                      : brands &&
                         brands.map((item, index) => (
                           <option key={index} value={item._id}>
                             {item.name}

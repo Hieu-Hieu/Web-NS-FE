@@ -15,8 +15,11 @@ import Order from "../pages/Order";
 import OrderHistory from "../pages/OrderHistory";
 import OrderDetail from "../pages/OrderDetail";
 import NotFound from "../components/NotFound";
+import { useGoogleAnalytics } from "../hooks";
 
 const RoutesUser = () => {
+  useGoogleAnalytics();
+
   return (
     <Routes>
       <Route path="product/:id" element={<Product />} />
