@@ -32,6 +32,19 @@ const orderApi = {
     const url = `/order/online-pay/${orderid}`;
     return axiosClient.put(url, paymentResult);
   },
+
+  getShippingServices: (data) => {
+    const url = `/order/shipping-services`;
+    return axiosClient.post(url, data);
+  },
+  getShippingFee: (data) => {
+    const url = `/order/shipping-fee`;
+    return axiosClient.post(url, data);
+  },
+  getShippingLeadtime: (data) => {
+    const url = `/order/shipping-leadtime`;
+    return axiosClient.post(url, data);
+  },
 };
 
 export default orderApi;

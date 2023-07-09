@@ -16,6 +16,8 @@ import OrderHistory from "../pages/OrderHistory";
 import OrderDetail from "../pages/OrderDetail";
 import NotFound from "../components/NotFound";
 import { useGoogleAnalytics } from "../hooks";
+import PaymentLoading from "../components/PaymentLoading";
+import Order2 from "../pages/Orderv2";
 
 const RoutesUser = () => {
   useGoogleAnalytics();
@@ -29,10 +31,11 @@ const RoutesUser = () => {
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="my-profile" element={<UserProfile />} />
-      <Route path="order" element={<Order />} />
+      <Route path="order" element={<Order2 />} />
       <Route path="catalog" element={<Catalog />} />
       <Route path="order-history" element={<OrderHistory />} />
       <Route path="order-detail/:id" element={<OrderDetail />} />
+      <Route path="vnpay" element={<PaymentLoading />} />
       <Route path="/" element={<Home />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

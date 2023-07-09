@@ -6,14 +6,14 @@ import Helmet from "../components/Helmet";
 import numberWithCommas from "../utils/numberWithCommas";
 import { createOrder } from "../redux/actions/orderAction";
 import { useNavigate } from "react-router-dom";
-import { Menu, Radio, Select } from "antd";
+import { Button, Form, Input, Menu, Radio, Select } from "antd";
 import { ToastContainer, toast } from "react-toastify";
 import { SettingOutlined } from "@ant-design/icons";
 import { useValues } from "../hooks";
 import orderApi from "../api/orderApi";
 import moment from "moment";
 
-const Order = (props) => {
+const Order2 = (props) => {
   const dispatch = useDispatch();
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
@@ -26,7 +26,7 @@ const Order = (props) => {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [phone, setPhone] = useState("");
-  const [mail, setMail] = useState("");
+  const [mail, setMail] = useState(() => userInfo?.email);
   const [housseNumber, setHouseNumber] = useState("");
   const [note, setNote] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("COD");
@@ -199,7 +199,7 @@ const Order = (props) => {
   };
 
   const handleSubmitOrder = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     const address = {
       province: province,
       district: district,
@@ -211,6 +211,20 @@ const Order = (props) => {
 
     if (userInfo && cartItems.length > 0) {
       if (window.confirm("Xác nhận đặt hàng")) {
+        console.log({
+          user: userInfo._id,
+          totalPrice: total,
+          address,
+          paymentMethod: paymentMethod,
+          paymentResult: false,
+          mail,
+          firstName: fname,
+          lastName: lname,
+          message: note,
+          phone,
+          orderItems: cartItems,
+        });
+        return;
         dispatch(
           createOrder({
             user: userInfo._id,
@@ -226,7 +240,6 @@ const Order = (props) => {
             orderItems: cartItems,
           })
         );
-        // console.log(order)
       }
     }
   };
@@ -241,57 +254,88 @@ const Order = (props) => {
         hideProgressBar={true}
         newestOnTop={false}
       />
-      <form className="order" onSubmit={handleSubmitOrder}>
+      <Form className="order" onFinish={handleSubmitOrder} layout="vertical">
         <div className="order__info-shipping">
           <h4 className="order__info-title">Thông tin đặt hàng</h4>
           <div className="order__info-form">
             <div className="order__info-item-half">
               <div className="order__info-form-item half">
-                <label className="order__info-input-label">Họ</label>
+                {/* <label className="order__info-input-label">Họ</label>
                 <input
                   className="order__info-input"
                   required
                   value={lname}
                   onChange={(e) => setLname(e.target.value)}
-                />
+                /> */}
+                <Form.Item
+                  label="Họ"
+                  name="lastName"
+                  rules={[{ required: true, message: "NHập họ của bạn" }]}
+                >
+                  <Input onChange={(e) => setLname(e.target.value)} />
+                </Form.Item>
               </div>
 
               <div className="order__info-form-item half">
-                <label className="order__info-input-label">Tên</label>
+                {/* <label className="order__info-input-label">Tên</label>
                 <input
                   className="order__info-input"
                   required
                   value={fname}
                   onChange={(e) => setFname(e.target.value)}
-                />
+                /> */}
+                <Form.Item
+                  label="Tên"
+                  name="firstName"
+                  rules={[{ required: true, message: "NHập tên của bạn" }]}
+                >
+                  <Input onChange={(e) => setFname(e.target.value)} />
+                </Form.Item>
               </div>
             </div>
             <div className="order__info-item-half">
               <div className="order__info-form-item half">
-                <label className="order__info-input-label">Số điện thoại</label>
+                {/* <label className="order__info-input-label">Số điện thoại</label>
                 <input
                   className="order__info-input"
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                />
+                /> */}
+                <Form.Item
+                  label="Số điện thoại"
+                  name="phone"
+                  rules={[{ required: true, message: "Số điện thoại của bạn" }]}
+                >
+                  <Input onChange={(e) => setPhone(e.target.value)} />
+                </Form.Item>
               </div>
 
               <div className="order__info-form-item half">
-                <label className="order__info-input-label">Email</label>
+                {/* <label className="order__info-input-label">Email</label>
                 <input
                   className="order__info-input"
-                  required
+                  required /
                   value={mail}
                   onChange={(e) => setMail(e.target.value)}
-                />
+                /> */}
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  rules={[{ required: true, message: "Nhập email của bạn" }]}
+                >
+                  <Input
+                    onChange={(e) => setMail(e.target.value)}
+                    defaultValue={userInfo?.email}
+                  />
+                </Form.Item>
               </div>
             </div>
             <div className="order__info-item-half">
               <div className="order__info-form-item half">
-                <label className="order__info-input-label">
+                {/* <label className="order__info-input-label">
                   Tỉnh, thành phố
-                </label>
+                </label> */}
                 {/* <select onChange={onChangeProvince} required>
                   <option value="">Chọn Tỉnh, Thành phố</option>
                   {provinces &&
@@ -301,24 +345,30 @@ const Order = (props) => {
                       </option>
                     ))}
                 </select> */}
-                <Select
-                  placeholder="Chọn Tỉnh, Thành phố"
-                  onChange={(value, data) => {
-                    onChangeProvince(value, data);
-                  }}
+                <Form.Item
+                  name="province"
+                  label="Tỉnh, Thành phố"
+                  rules={[{ required: true }]}
                 >
-                  {provinces.map((item) => (
-                    <Select.Option
-                      value={item.ProvinceName}
-                      key={item.ProvinceID}
-                    >
-                      {item.ProvinceName}
-                    </Select.Option>
-                  ))}
-                </Select>
+                  <Select
+                    placeholder="Chọn Tỉnh, Thành phố"
+                    onChange={(value, data) => {
+                      onChangeProvince(value, data);
+                    }}
+                  >
+                    {provinces.map((item) => (
+                      <Select.Option
+                        value={item.ProvinceName}
+                        key={item.ProvinceID}
+                      >
+                        {item.ProvinceName}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
               </div>
               <div className="order__info-form-item half">
-                <label className="order__info-input-label">Quận, huyện</label>
+                {/* <label className="order__info-input-label">Quận, huyện</label> */}
                 {/* <select onChange={onChangeDistrict} required>
                   <option value="">Quận, huyện</option>
                   {districts.map((item) => (
@@ -327,20 +377,25 @@ const Order = (props) => {
                     </option>
                   ))}
                 </select> */}
-
-                <Select
-                  placeholder="Quận, huyện"
-                  onChange={(value, data) => onChangeDistrict(value, data)}
+                <Form.Item
+                  name="district"
+                  label="Quận, huyện"
+                  rules={[{ required: true }]}
                 >
-                  {districts.map((item) => (
-                    <Select.Option
-                      value={item.DistrictName}
-                      key={item.DistrictID}
-                    >
-                      {item.DistrictName}
-                    </Select.Option>
-                  ))}
-                </Select>
+                  <Select
+                    placeholder="Quận, huyện"
+                    onChange={(value, data) => onChangeDistrict(value, data)}
+                  >
+                    {districts.map((item) => (
+                      <Select.Option
+                        value={item.DistrictName}
+                        key={item.DistrictID}
+                      >
+                        {item.DistrictName}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
               </div>
             </div>
             <div className="order__info-item-half">
@@ -360,41 +415,60 @@ const Order = (props) => {
                     </option>
                   ))}
                 </select> */}
-                <Select
-                  placeholder="Xã,phường"
-                  onChange={(value, data) => {
-                    onChangeWard(value, data);
-                  }}
+                <Form.Item
+                  name="ward"
+                  label="Xã,phường"
+                  rules={[{ required: true }]}
                 >
-                  {wards.map((item) => (
-                    <Select.Option value={item.WardName} key={item.WardCode}>
-                      {item.WardName}
-                    </Select.Option>
-                  ))}
-                </Select>
+                  <Select
+                    placeholder="Xã,phường"
+                    onChange={(value, data) => {
+                      onChangeWard(value, data);
+                    }}
+                  >
+                    {wards.map((item) => (
+                      <Select.Option value={item.WardName} key={item.WardCode}>
+                        {item.WardName}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
               </div>
               <div className="order__info-form-item half">
-                <label className="order__info-input-label">
+                {/* <label className="order__info-input-label">
                   Số nhà, thôn/xóm
                 </label>
                 <input
                   className="order__info-input"
                   required
                   onChange={(e) => setHouseNumber(e.target.value)}
-                ></input>
+                ></input> */}
+                <Form.Item
+                  name="houseNumber"
+                  label="Số nhà, thôn/xóm"
+                  rules={[{ required: true }]}
+                >
+                  <Input.TextArea
+                    onChange={(e) => setHouseNumber(e.target.value)}
+                  />
+                </Form.Item>
               </div>
             </div>
             <div className="order__info-item">
               <div className="order__info-form-item">
-                <label className="order__info-input-label">Ghi chú</label>
+                {/* <label className="order__info-input-label">Ghi chú</label>
                 <textarea
                   className="order__info-input"
                   onChange={(e) => setNote(e.target.value)}
-                />
+                /> */}
+                <Form.Item name="note" label="Ghi chú">
+                  <Input.TextArea onChange={(e) => setNote(e.target.value)} />
+                </Form.Item>
               </div>
             </div>
           </div>
         </div>
+        {/* ------------------------------- */}
         <div className="order__list">
           <div className="order__list-title">Đơn hàng của bạn</div>
           <div className="order__list-sub-title">Sản phẩm</div>
@@ -509,15 +583,19 @@ const Order = (props) => {
               <label for="online">Thanh toán bằng Vnpay</label>
             </div>
             <div className="order__button">
-              <button type="submit" className="order__button-checkout">
-                Đặt hàng
-              </button>
-              <button
-                className="order__button-return"
-                onClick={() => navigate("/catalog")}
-              >
-                Tiếp tục mua hàng
-              </button>
+              <Form.Item>
+                <button type="submit" className="order__button-checkout">
+                  Đặt hàng
+                </button>
+              </Form.Item>
+              <Form.Item>
+                <button
+                  className="order__button-return"
+                  onClick={() => navigate("/catalog")}
+                >
+                  Tiếp tục mua hàng
+                </button>
+              </Form.Item>
             </div>
             <div className="order__button">
               {loading && <div>Đang xử lý...</div>}
@@ -525,9 +603,9 @@ const Order = (props) => {
             </div>
           </div>
         </div>
-      </form>
+      </Form>
     </Helmet>
   );
 };
 
-export default Order;
+export default Order2;

@@ -30,7 +30,6 @@ axiosClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log(error.response.data.message);
     const message =
       error.response && error.response.data.message
         ? error.response.data.message

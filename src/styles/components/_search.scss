@@ -23,17 +23,18 @@
   }
   @include mobile {
     top: $header-mobile-height;
+    width: 90vw;
   }
 }
 
-.simple-search button {
+.simple-search button[type="submit"] {
   padding: 10px 10px;
   color: black;
   flex-shrink: 0;
   background-color: transparent;
-  position: absolute;
-  right: 0;
-  top: 0;
+  // position: absolute;
+  // right: 0;
+  // top: 0;
   outline: none;
 }
 .simple-search i {

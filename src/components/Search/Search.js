@@ -17,6 +17,12 @@ export const Search = forwardRef((props, searchMobileRef) => {
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition({ clearTranscriptOnListen: true });
 
+  function filterSensitiveText(text) {
+    const sensitiveWords = ["sex", "ass", "fuck"];
+    const regex = new RegExp(sensitiveWords.join("|"), "gi");
+    return text.replace(regex, "");
+  }
+
   const handleListening = () => {
     if (listening) {
       SpeechRecognition.stopListening();
@@ -28,7 +34,8 @@ export const Search = forwardRef((props, searchMobileRef) => {
   };
 
   useEffect(() => {
-    setText(transcript);
+    console.log(transcript);
+    setText(filterSensitiveText(transcript));
   }, [transcript]);
 
   useEffect(() => {
@@ -66,8 +73,15 @@ export const Search = forwardRef((props, searchMobileRef) => {
           onBlur={props.hanldeOnblur}
           value={text}
         />
+
         <span className="microphone" onClick={handleListening}>
-          <i className="bx bxs-microphone"></i>
+          <button className={`btn ${listening ? "active" : ""}`}>
+            {listening ? (
+              <i className="bx bxs-microphone"></i>
+            ) : (
+              <i class="bx bx-microphone-off"></i>
+            )}
+          </button>
         </span>
       </span>
 

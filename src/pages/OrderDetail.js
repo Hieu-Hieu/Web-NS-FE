@@ -9,13 +9,15 @@ import {
   payOrder,
   userUpdateOrderAction,
 } from "../redux/actions/orderAction";
-import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
 import { ORDER_PAY_RESET } from "../redux/constants/orderConstants";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../api/axiosClient";
+import { Button as AntdBtn, notification } from "antd";
+import { PaymentOutlined } from "@mui/icons-material";
+import paymentApi from "../api/paymentApi";
 
 const OrderDetail = () => {
   const params = useParams();
@@ -153,6 +155,19 @@ const OrderDetail = () => {
     }
   };
 
+  const handleClickVnpay = () => {
+    if (orderId) {
+      paymentApi.createPaymentUrl(orderId).then((res) => {
+        if (res.status) {
+          // navigate(res.paymentUrl);
+          window.location.href = res.paymentUrl;
+        }
+      });
+    } else {
+      notification.error({ message: "Đơn hàng không hợp lệ" });
+    }
+  };
+
   return (
     <div>
       <ToastContainer
@@ -271,7 +286,7 @@ const OrderDetail = () => {
                 <label>Loại thanh toán: {order && order.paymentMethod}</label>
               </div>
               <div className="">
-                {order && order.paymentMethod === "Online" && !order.isPaid && (
+                {order && order.paymentMethod === "paypal" && !order.isPaid && (
                   <div>
                     <span style={{ color: "red" }}>
                       Xin mời quý khách thanh toán để hoàn tất đơn hàng
@@ -291,6 +306,21 @@ const OrderDetail = () => {
                   </div>
                 )}
               </div>
+              {order && order.paymentMethod === "vnpay" && !order.isPaid && (
+                <div>
+                  <span style={{ color: "red" }}>
+                    Xin mời quý khách thanh toán để hoàn tất đơn hàng
+                  </span>
+
+                  <AntdBtn
+                    type="primary"
+                    icon={<PaymentOutlined />}
+                    onClick={handleClickVnpay}
+                  >
+                    Thanh toán Vnpay
+                  </AntdBtn>
+                </div>
+              )}
               <div className="order__button">
                 <button
                   className="order__button-checkout"

@@ -12,6 +12,7 @@ import numberWithCommas from "../utils/numberWithCommas";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
+import { Image } from "antd";
 
 const ProductView = (props) => {
   const dispatch = useDispatch();
@@ -87,12 +88,14 @@ const ProductView = (props) => {
               className="product__images__list__item"
               onClick={() => setPreviewImg(item)}
             >
-              <img src={item} alt="" />
+              {/* <img src={item} alt="" /> */}
+              <Image src={item} alt="" />
             </div>
           ))}
         </div>
         <div className="product__images__main">
           <img src={previewImg} alt="" />
+          {/* <Image src={previewImg} alt="" /> */}
         </div>
         <div
           className={`product-description ${descriptionExpand ? "expand" : ""}`}
