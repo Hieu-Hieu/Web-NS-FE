@@ -1,8 +1,21 @@
 import axios from "axios";
 import queryString from "query-string";
 
+function checkCurrentEnvironment() {
+  if (process.env.NODE_ENV === "production") {
+    return "product";
+  } else {
+    return "dev";
+  }
+}
+
+const env = checkCurrentEnvironment();
+
 const axiosClient = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+  baseURL:
+    env === "dev"
+      ? process.env.REACT_APP_API_URL_DEV
+      : process.env.REACT_APP_API_URL,
   // baseURL: 'http://localhost:5000/v1',
 
   headers: {
