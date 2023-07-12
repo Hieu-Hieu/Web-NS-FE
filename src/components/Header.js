@@ -42,12 +42,12 @@ const Header = () => {
       user_menu = [
         {
           icon: "bx bx-user",
-          content: "Trang Admin",
+          content: t("admin_page"),
           go: "admin",
         },
         {
           icon: "bx bx-log-out-circle bx-rotate-180",
-          content: "Đăng xuất",
+          content: t("logout"),
           go: "",
         },
       ];
@@ -55,17 +55,17 @@ const Header = () => {
       user_menu = [
         {
           icon: "bx bx-user",
-          content: "Tài khoản",
+          content: t("account"),
           go: "/my-profile",
         },
         {
           icon: "bx bx-user",
-          content: "Đơn hàng",
+          content: t("orders"),
           go: "order-history",
         },
         {
           icon: "bx bx-log-out-circle bx-rotate-180",
-          content: "Đăng xuất",
+          content: t("logout"),
           go: "",
         },
       ];
@@ -176,8 +176,8 @@ const Header = () => {
                   <Link to="/login" className="user-icon">
                     <i class="bx bx-user"></i>
                   </Link>
-                  <Link to="/login">Đăng nhập</Link>
-                  <Link to="/register">| Đăng ký</Link>
+                  <Link to="/login">{t("login")}</Link>
+                  <Link to="/register">| {t("logout")}</Link>
                 </div>
               ) : (
                 <div className="user-wrap">

@@ -9,6 +9,10 @@ const orderApi = {
     const url = "/order";
     return axiosClient.post(url, order);
   },
+  sendMailOrder: (order) => {
+    const url = "/order/sendmail";
+    return axiosClient.post(url, order);
+  },
   getOrderDetail: (orderid) => {
     const url = `/order/${orderid}`;
     return axiosClient.get(url);

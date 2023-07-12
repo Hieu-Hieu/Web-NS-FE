@@ -1,0 +1,9 @@
+.chat-widget_gpt{
+    .rcw-picker-icon{
+        display: none;
+    }
+    .rcw-sender{
+        align-items: center;
+        justify-content: space-around;
+    }
+}

@@ -231,7 +231,7 @@ const OrderDetail = () => {
             <div className="order__shipping">
               <div className="order__shipping-title">Phí vận chuyển</div>
               <div className="order__shipping-fee">
-                {numberWithCommas(30000)}đ
+                {numberWithCommas(order?.shippingFee || 30000)}đ
               </div>
             </div>
             <div className="order__price">
@@ -306,21 +306,23 @@ const OrderDetail = () => {
                   </div>
                 )}
               </div>
-              {order && order.paymentMethod === "vnpay" && !order.isPaid && (
-                <div>
-                  <span style={{ color: "red" }}>
-                    Xin mời quý khách thanh toán để hoàn tất đơn hàng
-                  </span>
+              {order &&
+                order.paymentMethod === "vnpay" &&
+                !(order.isPaid || order?.status === "DA_HUY") && (
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <span style={{ color: "red" }}>
+                      Xin mời quý khách thanh toán để hoàn tất đơn hàng
+                    </span>
 
-                  <AntdBtn
-                    type="primary"
-                    icon={<PaymentOutlined />}
-                    onClick={handleClickVnpay}
-                  >
-                    Thanh toán Vnpay
-                  </AntdBtn>
-                </div>
-              )}
+                    <AntdBtn
+                      type="primary"
+                      icon={<PaymentOutlined />}
+                      onClick={handleClickVnpay}
+                    >
+                      Thanh toán Vnpay
+                    </AntdBtn>
+                  </div>
+                )}
               <div className="order__button">
                 <button
                   className="order__button-checkout"

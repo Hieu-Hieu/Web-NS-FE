@@ -4,9 +4,11 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 
 export const Search = forwardRef((props, searchMobileRef) => {
   let navigate = useNavigate();
+  const { t } = useTranslation();
   const [text, setText] = useState("");
 
   const {
@@ -53,7 +55,7 @@ export const Search = forwardRef((props, searchMobileRef) => {
     if (text.trim()) {
       navigate(`/catalog?name=${text}`);
     } else {
-      navigate("/");
+      navigate("/catalog");
     }
   };
 
@@ -66,8 +68,7 @@ export const Search = forwardRef((props, searchMobileRef) => {
       <span className="input_search_wrapper">
         <input
           type="text"
-          placeholder="Tìm kiếm..."
-          required
+          placeholder={t("search")}
           onChange={(e) => setText(e.target.value)}
           autoFocus
           onBlur={props.hanldeOnblur}

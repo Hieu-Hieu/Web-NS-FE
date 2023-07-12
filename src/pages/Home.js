@@ -18,6 +18,7 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
+import { Spin } from "antd";
 
 const bannerStyle = {
   margin: "0 auto",
@@ -134,7 +135,7 @@ const Home = () => {
       <Section>
         <SectionTitle>{t("best_seller")}</SectionTitle>
         {loadingTopProducts ? (
-          <div>Loading...</div>
+          <Spin spinning={loadingTopProducts}></Spin>
         ) : errorTopProducts ? (
           <div>{errorTopProducts}</div>
         ) : (
@@ -180,7 +181,7 @@ const Home = () => {
       <Section>
         <SectionTitle>{t("vietgap_product")}</SectionTitle>
         {loadingVG ? (
-          <div>Loading...</div>
+          <Spin spinning={loadingVG}></Spin>
         ) : errorVG ? (
           <div>{errorVG}</div>
         ) : (

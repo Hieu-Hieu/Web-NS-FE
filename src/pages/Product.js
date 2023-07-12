@@ -14,11 +14,13 @@ import {
 import Loading from "../components/Loading";
 import Comments from "../components/Comments/Comments";
 import { useValues } from "../hooks";
+import { useTranslation } from "react-i18next";
 
 const Product = () => {
   const dispatch = useDispatch();
   const params = useParams();
   const productId = params.id;
+  const { t } = useTranslation();
 
   const productDetail = useSelector((state) => state.productDetail);
   const { loading, error, product } = productDetail;
@@ -65,7 +67,7 @@ const Product = () => {
         <Loading />
       ) : error ? (
         <>
-          <Link to="/">Quay về trang chủ</Link>
+          <Link to="/">{t("back_to_home_page")}</Link>
           <div>{error}</div>
         </>
       ) : (
@@ -81,13 +83,13 @@ const Product = () => {
             <div>{errorTopProductRelate}</div>
           ) : (
             <Section>
-              <SectionTitle>Sản phẩm tương tự</SectionTitle>
+              <SectionTitle>{t("similar_product")}</SectionTitle>
               {!productsRelate || productsRelate.length === 0 ? (
                 <div
                   className="text-center"
                   style={{ height: "10vh", fontSize: "30px" }}
                 >
-                  Không có sản phẩm nào liên quan
+                  {t("no_related_products")}
                 </div>
               ) : (
                 <SectionBody>

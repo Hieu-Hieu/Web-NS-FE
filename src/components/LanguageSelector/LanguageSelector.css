@@ -1,0 +1,30 @@
+.language_selector img {
+  display: block;
+  height: 100%;
+  display: block;
+  border-radius: 6px;
+
+  width: 100%;
+  height: 100%;
+}
+
+.language_selector .ant-select-selector {
+  padding: 2px !important;
+  line-height: unset;
+}
+
+.language_selector .ant-select-selection-search {
+  display: none;
+}
+
+.language_selector .ant-select-item-option {
+  padding: 2px !important;
+}
+
+.ant-select-item.ant-select-item-option {
+  padding: 4px;
+}
+
+.ant-select-item.ant-select-item-option img {
+  border-radius: 2px;
+}

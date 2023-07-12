@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Widget, addResponseMessage } from "react-chat-widget";
 
-import "react-chat-widget/lib/styles.css";
 import chatApi from "../../../api/chatApi";
-import logo from "../../../images/admin/avata.jpg";
+import "react-chat-widget/lib/styles.css";
+import "./ChatWidget.css";
 
 function ChatWidget() {
   const [loading, setLoading] = useState(false);
@@ -16,12 +16,16 @@ function ChatWidget() {
   }, []);
 
   const handleNewUserMessage = (newMessage) => {
+    if (loading) return;
     setLoading(true);
     chatApi
       .chatGPT(newMessage)
       .then((res) => {
         if (res?.text) {
           addResponseMessage(res?.text);
+          addResponseMessage(
+            "Lưu ý: Câu trả lời trên chỉ mang tính chất tham khảo và có thể không hoàn toàn chính xác"
+          );
         }
       })
       .finally(() => {
@@ -33,14 +37,18 @@ function ChatWidget() {
     <div className="chat-widget_gpt">
       <Widget
         handleNewUserMessage={handleNewUserMessage}
-        profileAvatar={logo}
+        profileAvatar={
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/1200px-ChatGPT_logo.svg.png"
+        }
         title="Chat với AI"
         subtitle="Chat GPT - AI"
         senderPlaceHolder={
           loading
-            ? "Đang xử lý. Xin chờ chút nhé!"
-            : "Bạn muốn hỏi tôi điều gì không?"
+            ? "Tôi đang xử lý. Xin chờ chút nhé!"
+            : "Hãy viết câu hỏi của bạn vào đây nhé!"
         }
+        emojis={false}
+        showBadge={true}
       />
     </div>
   );

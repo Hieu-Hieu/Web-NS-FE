@@ -2,6 +2,10 @@ import { Button, Dropdown, Select } from "antd";
 import GlobalOutlined from "@ant-design/icons";
 import React from "react";
 import { useEffect } from "react";
+import ViFlagIcon from "../../images/vi-flag.png";
+import EnFlagIcon from "../../images/en-flag.png";
+import "./LanguageSelector.css";
+
 const items = [
   {
     key: "1",
@@ -94,25 +98,32 @@ const LanguageSelector = () => {
 
   return (
     <Select
+      className="language_selector"
       labelInValue
+      showSearch={false}
       defaultValue={{
         value: lang,
-        label: lang === "vi" ? "Tiếng Việt" : "English",
+        label:
+          lang === "vi" ? (
+            <img src={ViFlagIcon} alt="Tiếng Việt" />
+          ) : (
+            <img src={EnFlagIcon} alt="English" />
+          ),
       }}
       showArrow={false}
       style={{
         marginLeft: 10,
-        minWidth: 100,
+        // minWidth: 100,
       }}
       onChange={handleChange}
       options={[
         {
           value: "vi",
-          label: "Tiếng Việt",
+          label: <img src={ViFlagIcon} alt="Tiếng Việt" />,
         },
         {
           value: "en",
-          label: "English",
+          label: <img src={EnFlagIcon} alt="English" />,
         },
       ]}
     />

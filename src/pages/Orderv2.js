@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -6,12 +6,15 @@ import Helmet from "../components/Helmet";
 import numberWithCommas from "../utils/numberWithCommas";
 import { createOrder } from "../redux/actions/orderAction";
 import { useNavigate } from "react-router-dom";
-import { Button, Form, Input, Menu, Radio, Select } from "antd";
-import { ToastContainer, toast } from "react-toastify";
-import { SettingOutlined } from "@ant-design/icons";
+import { Form, Input, Menu, Select } from "antd";
+import { ToastContainer } from "react-toastify";
 import { useValues } from "../hooks";
 import orderApi from "../api/orderApi";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
+import { useForm } from "antd/es/form/Form";
+
+const phonePattern = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
 
 const Order2 = (props) => {
   const dispatch = useDispatch();
@@ -19,6 +22,7 @@ const Order2 = (props) => {
   const { userInfo } = userSignin;
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
+  const { t } = useTranslation();
 
   const orderCreate = useSelector((state) => state.createOrder);
   const { order, loading, error } = orderCreate;
@@ -39,24 +43,30 @@ const Order2 = (props) => {
   const [to_ward_code, set_To_ward_code] = useState("");
   const [to_district_id, set_To_district_id] = useState("");
 
+  const [form] = useForm();
+
   const [values, setValues] = useValues({
     shippingFee: 30000,
     listShippingService: [
       {
-        service_id: 53320,
+        service_id: 53321,
         short_name: "Chuyển phát thương mại điện tử",
         service_type_id: 2,
       },
     ],
     selectedShippingService: {
-      service_id: 53320,
+      service_id: 53321,
       short_name: "Chuyển phát thương mại điện tử",
       service_type_id: 2,
     },
     leadTime: null,
   });
 
-  let total = cartItems.reduce((a, c) => a + c.price * c.quantity, 0) + 30000;
+  let total = cartItems.reduce((a, c) => a + c.price * c.quantity, 0);
+
+  const amount = useMemo(() => {
+    return total + values.shippingFee;
+  }, [total, values.shippingFee]);
 
   const navigate = useNavigate();
 
@@ -88,9 +98,10 @@ const Order2 = (props) => {
         .getShippingFee({
           to_district: +to_district_id,
           to_ward_code: +to_ward_code,
+          service_id: values.selectedShippingService?.service_id,
         })
         .then((res) => {
-          setValues({ shippingFee: res.data?.total });
+          setValues({ shippingFee: res.data?.total || 30000 });
         });
 
       orderApi
@@ -211,24 +222,10 @@ const Order2 = (props) => {
 
     if (userInfo && cartItems.length > 0) {
       if (window.confirm("Xác nhận đặt hàng")) {
-        console.log({
-          user: userInfo._id,
-          totalPrice: total,
-          address,
-          paymentMethod: paymentMethod,
-          paymentResult: false,
-          mail,
-          firstName: fname,
-          lastName: lname,
-          message: note,
-          phone,
-          orderItems: cartItems,
-        });
-        return;
         dispatch(
           createOrder({
             user: userInfo._id,
-            totalPrice: total,
+            totalPrice: amount,
             address,
             paymentMethod: paymentMethod,
             paymentResult: false,
@@ -238,14 +235,23 @@ const Order2 = (props) => {
             message: note,
             phone,
             orderItems: cartItems,
+            shippingFee: values.shippingFee || 30000,
           })
         );
       }
     }
   };
+
   useEffect(() => {
     getProvince();
   }, []);
+
+  useEffect(() => {
+    if (form.getFieldValue("email") !== userInfo?.email) {
+      form.setFieldsValue({ email: userInfo?.email });
+    }
+  }, [userInfo]);
+
   return (
     <Helmet title="Đặt hàng">
       <ToastContainer
@@ -254,7 +260,12 @@ const Order2 = (props) => {
         hideProgressBar={true}
         newestOnTop={false}
       />
-      <Form className="order" onFinish={handleSubmitOrder} layout="vertical">
+      <Form
+        className="order"
+        form={form}
+        onFinish={handleSubmitOrder}
+        layout="vertical"
+      >
         <div className="order__info-shipping">
           <h4 className="order__info-title">Thông tin đặt hàng</h4>
           <div className="order__info-form">
@@ -305,7 +316,13 @@ const Order2 = (props) => {
                 <Form.Item
                   label="Số điện thoại"
                   name="phone"
-                  rules={[{ required: true, message: "Số điện thoại của bạn" }]}
+                  rules={[
+                    { required: true, message: "Số điện thoại của bạn" },
+                    {
+                      pattern: phonePattern,
+                      message: "Số điện thoại không hợp lệ",
+                    },
+                  ]}
                 >
                   <Input onChange={(e) => setPhone(e.target.value)} />
                 </Form.Item>
@@ -324,10 +341,7 @@ const Order2 = (props) => {
                   name="email"
                   rules={[{ required: true, message: "Nhập email của bạn" }]}
                 >
-                  <Input
-                    onChange={(e) => setMail(e.target.value)}
-                    defaultValue={userInfo?.email}
-                  />
+                  <Input onChange={(e) => setMail(e.target.value)} />
                 </Form.Item>
               </div>
             </div>
@@ -470,8 +484,8 @@ const Order2 = (props) => {
         </div>
         {/* ------------------------------- */}
         <div className="order__list">
-          <div className="order__list-title">Đơn hàng của bạn</div>
-          <div className="order__list-sub-title">Sản phẩm</div>
+          <div className="order__list-title">{t("your_order")}</div>
+          <div className="order__list-sub-title">{t("products")}</div>
           <ul className="order__list-product">
             {cartItems.map((item, index) => (
               <li key={index} className="order__list-product-item">
@@ -482,7 +496,9 @@ const Order2 = (props) => {
                   </div>
                 </span>
                 <div className="order__list-product-price">
-                  {numberWithCommas(item.price * item.quantity)}đ
+                  <strong>
+                    {numberWithCommas(item.price * item.quantity)}đ
+                  </strong>
                 </div>
               </li>
             ))}
@@ -531,7 +547,13 @@ const Order2 = (props) => {
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <strong>Phí vận chuyển:</strong>
-                  <span> {numberWithCommas(values.shippingFee || 30000)}đ</span>
+                  <span>
+                    {" "}
+                    <strong>
+                      {" "}
+                      {numberWithCommas(values.shippingFee)}đ
+                    </strong>{" "}
+                  </span>
                 </div>
               </Menu.Item>
             </Menu>
@@ -547,8 +569,10 @@ const Order2 = (props) => {
             </div>
           </div> */}
           <div className="order__price">
-            <div className="order__price-title">Tổng tiền</div>
-            <div className="order__price-total">{numberWithCommas(total)}đ</div>
+            <div className="order__price-title">{t("cart.amount")}</div>
+            <div className="order__price-total">
+              <strong>{numberWithCommas(amount)}đ</strong>
+            </div>
           </div>
           <div className="order__payment">
             <div className="order__payment-item">
@@ -560,17 +584,9 @@ const Order2 = (props) => {
                 value="COD"
                 onClick={(e) => setPaymentMethod(e.target.value)}
               />
-              <label for="COD">Thanh toán khi nhận hàng</label>
-            </div>
-            <div className="order__payment-item">
-              <input
-                type="radio"
-                id="paypal"
-                name="pay"
-                value="paypal"
-                onClick={(e) => setPaymentMethod(e.target.value)}
-              />
-              <label for="online">Thánh toán qua PayPal</label>
+              <label for="COD" style={{ marginLeft: 5 }}>
+                Thanh toán khi nhận hàng
+              </label>
             </div>
             <div className="order__payment-item">
               <input
@@ -580,20 +596,34 @@ const Order2 = (props) => {
                 value="vnpay"
                 onClick={(e) => setPaymentMethod(e.target.value)}
               />
-              <label for="online">Thanh toán bằng Vnpay</label>
+              <label for="online" style={{ marginLeft: 5 }}>
+                Thanh toán bằng Vnpay
+              </label>
+            </div>
+            <div className="order__payment-item">
+              <input
+                type="radio"
+                id="paypal"
+                name="pay"
+                value="paypal"
+                onClick={(e) => setPaymentMethod(e.target.value)}
+              />
+              <label for="online" style={{ marginLeft: 5 }}>
+                Thánh toán qua PayPal
+              </label>
             </div>
             <div className="order__button">
-              <Form.Item>
-                <button type="submit" className="order__button-checkout">
-                  Đặt hàng
-                </button>
-              </Form.Item>
               <Form.Item>
                 <button
                   className="order__button-return"
                   onClick={() => navigate("/catalog")}
                 >
                   Tiếp tục mua hàng
+                </button>
+              </Form.Item>
+              <Form.Item>
+                <button type="submit" className="order__button-checkout">
+                  Đặt hàng
                 </button>
               </Form.Item>
             </div>

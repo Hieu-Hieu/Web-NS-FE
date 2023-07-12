@@ -1,116 +1,99 @@
-import React from 'react'
+import React from "react";
 
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
-import Grid from './Grid'
+import Grid from "./Grid";
 
-import logo from '../images/Capture.PNG'
+import logo from "../images/Capture.PNG";
+import { useTranslation } from "react-i18next";
 
 const footerAboutLinks = [
-    {
-        display: "Giới thiệu",
-        path: "/about"
-    },
-    {
-        display: "Liên hệ",
-        path: "/contact"
-    },
-    {
-        display: "Sản phẩm",
-        path: "/category"
-    }
-]
+  {
+    display: "introduce",
+    path: "/about",
+  },
+  {
+    display: "contact",
+    path: "/contact",
+  },
+  {
+    display: "products",
+    path: "/category",
+  },
+];
 
 const footerCustomerLinks = [
-    {
-        display: "Chính sách đổi trả",
-        path: "/contact"
-    },
-    {
-        display: "Chính sách bảo hành",
-        path: "/contact"
-    },
-    {
-        display: "Chính sách hoàn tiền",
-        path: "/contact"
-    }
-]
+  {
+    display: "return_policy",
+    path: "/contact",
+  },
+  {
+    display: "warranty_policy",
+    path: "/contact",
+  },
+  {
+    display: "refund_policy",
+    path: "/contact",
+  },
+];
 const Footer = () => {
-    return (
-        <footer className="footer">
-            <div className="container">
-                <Grid
-                    col={4}
-                    mdCol={2}
-                    smCol={1}
-                    gap={10}
-                >
-                    <div>
-                        <div className="footer__title">
-                            Tổng đài hỗ trợ
-                        </div>
-                        <div className="footer__content">
-                            <p>
-                                Liên hệ đặt hàng <strong>0123456789</strong>
-                            </p>
-                            <p>
-                                Thắc mắc đơn hàng <strong>0123456789</strong>
-                            </p>
-                            <p>
-                                Góp ý, khiếu nại <strong>0123456789</strong>
-                            </p>
-                        </div>
-                    </div>
-                    <div>
-                        <div className="footer__title">
-                            Về NSHC
-                        </div>
-                        <div className="footer__content">
-                            {
-                                footerAboutLinks.map((item, index) => (
-                                    <p key={index}>
-                                        <Link to={item.path}>
-                                            {item.display}
-                                        </Link>
-                                    </p>
-                                ))
-                            }
-                        </div>
-                    </div>
-                    <div>
-                        <div className="footer__title">
-                            Chăm sóc khách hàng
-                        </div>
-                        <div className="footer__content">
-                            {
-                                footerCustomerLinks.map((item, index) => (
-                                    <p key={index}>
-                                        <Link to={item.path}>
-                                            {item.display}
-                                        </Link>
-                                    </p>
-                                ))
-                            }
-                        </div>
-                    </div>
-                    <div className="footer__about">
-                        <p>
-                            <Link to="/">
-                                <img src={logo} className="footer__logo" alt="" />
-                            </Link>
-                        </p>
-                        <p>
-                            Mã số thuế: 00000000 <br />
-                            Địa chỉ Nông trại: Số 1 Võ Văn Ngân <br />
-                            Email: Hfood@gmail.com <br />
-                            Shopee: Hfood <br />
-                            Fanpage: Hfoof
-                        </p>
-                    </div>
-                </Grid>
+  const { t } = useTranslation();
+  return (
+    <footer className="footer">
+      <div className="container">
+        <Grid col={4} mdCol={2} smCol={1} gap={10}>
+          <div>
+            <div className="footer__title">{t("support_call_center")}</div>
+            <div className="footer__content">
+              <p>
+                {t("contact_to_order")} <strong>0888308223</strong>
+              </p>
+              <p>
+                {t("order_problem")} <strong>0888308223</strong>
+              </p>
+              <p>
+                {t("feedback_complaints")} <strong>0888308223</strong>
+              </p>
             </div>
-        </footer>
-    )
-}
+          </div>
+          <div>
+            <div className="footer__title">{t("about_hfood")}</div>
+            <div className="footer__content">
+              {footerAboutLinks.map((item, index) => (
+                <p key={index}>
+                  <Link to={item.path}>{t(item.display)}</Link>
+                </p>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="footer__title">{t("customer_care")}</div>
+            <div className="footer__content">
+              {footerCustomerLinks.map((item, index) => (
+                <p key={index}>
+                  <Link to={item.path}>{t(item.display)}</Link>
+                </p>
+              ))}
+            </div>
+          </div>
+          <div className="footer__about">
+            <p>
+              <Link to="/">
+                <img src={logo} className="footer__logo" alt="" />
+              </Link>
+            </p>
+            <p>
+              {t("tax_code")}: 00000000 <br />
+              {t("address")}: Số 1 Võ Văn Ngân <br />
+              Email: Hfood@gmail.com <br />
+              Shopee: Hfood <br />
+              Fanpage: Hfoof
+            </p>
+          </div>
+        </Grid>
+      </div>
+    </footer>
+  );
+};
 
-export default Footer
+export default Footer;

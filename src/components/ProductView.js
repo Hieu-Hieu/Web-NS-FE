@@ -17,9 +17,9 @@ import { Image } from "antd";
 const ProductView = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  let product = props.product;
-
   const { t } = useTranslation();
+
+  let product = props.product;
 
   if (product === undefined) {
     product = {
@@ -100,7 +100,9 @@ const ProductView = (props) => {
         <div
           className={`product-description ${descriptionExpand ? "expand" : ""}`}
         >
-          <div className="product-description__title">Chi tiết sản phẩm</div>
+          <div className="product-description__title">
+            {t("product_details")}
+          </div>
           <div
             className="product-description__content"
             dangerouslySetInnerHTML={{ __html: product.description }}
@@ -110,7 +112,7 @@ const ProductView = (props) => {
               size="sm"
               onClick={() => setDescriptionExpand(!descriptionExpand)}
             >
-              {descriptionExpand ? "Thu gọn" : "Xem thêm"}
+              {descriptionExpand ? t("collapse") : t("see_more")}
             </Button>
           </div>
         </div>
@@ -121,9 +123,10 @@ const ProductView = (props) => {
           <span
             style={{ lineHeight: "30px", marginLeft: "10px", fontSize: "14px" }}
           >
-            <span style={{ fontWeight: "bold" }}>{product.qtyInStock}</span> sản
-            phẩm có sẵn |{" "}
-            <span style={{ fontWeight: "bold" }}>{product.sold}</span> đã bán
+            <span style={{ fontWeight: "bold" }}>{product.qtyInStock} </span>{" "}
+            {t("products_available")} |{" "}
+            <span style={{ fontWeight: "bold" }}>{product.sold}</span>{" "}
+            {t("sold")}
           </span>
         )}
         <div className="product__info__item">

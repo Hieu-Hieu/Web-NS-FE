@@ -43,11 +43,20 @@ export const createOrder = (order) => async (dispatch, getState) => {
   try {
     dispatch({ type: ORDER_CREATE_REQUEST });
     const data = await orderApi.createOrder(order);
+    orderApi
+      .sendMailOrder(order)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     if (data) {
       dispatch({
         type: ORDER_CREATE_SUCCESS,
         payload: data,
       });
+
       localStorage.setItem("cartItems", "");
       dispatch({ type: CART_RESET });
       console.log(data);

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useValues } from "../../hooks";
 import commentApi from "../../api/commentApi";
 import { Spin, notification } from "antd";
+import { useTranslation } from "react-i18next";
 
 const commentFormat = (item) => {
   return {
@@ -18,6 +19,7 @@ const commentFormat = (item) => {
 
 const Comments = ({ productId }) => {
   const user = useSelector((state) => state?.userSignin?.userInfo);
+  const { t } = useTranslation();
 
   const [values, setValues] = useValues({
     loadingComments: false,
@@ -128,6 +130,8 @@ const Comments = ({ productId }) => {
     <Spin spinning={values.loadingComments}>
       <CommentSection
         advancedInput={true}
+        onDeleteAction={() => {}}
+        onEditAction={() => {}}
         currentUser={
           user?._id
             ? {
@@ -149,6 +153,12 @@ const Comments = ({ productId }) => {
         onReplyAction={(data) => {
           handleNewComment(data);
         }}
+        currentData={(data) => {
+          console.log("curent data", data);
+        }}
+        customNoComment={() => (
+          <div class="no-comDiv">{t("add_your_comment")}</div>
+        )}
       />
     </Spin>
   );
